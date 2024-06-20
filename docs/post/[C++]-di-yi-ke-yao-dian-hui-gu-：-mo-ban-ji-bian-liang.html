@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 1. 什么是编程？ 
+
+编程就是“编写程序”；是人编写计算机能识别的“指令”来让计算机完成一定的任务。">
+<meta property="og:title" content="[C++]第一课要点回顾：模板及变量">
+<meta property="og:description" content="# 1. 什么是编程？ 
+
+编程就是“编写程序”；是人编写计算机能识别的“指令”来让计算机完成一定的任务。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mcoblackmore.github.io/liuchanghui.github.io/post/%5BC%2B%2B%5D-di-yi-ke-yao-dian-hui-gu-%EF%BC%9A-mo-ban-ji-bian-liang.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>[C++]第一课要点回顾：模板及变量</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">[C++]第一课要点回顾：模板及变量</h1>
+<div class="title-right">
+    <a href="https://mcoblackmore.github.io/liuchanghui.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/mcoblackmore/liuchanghui.github.io/issues/2" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>1. 什么是编程？</h1>
+<p>编程就是“编写程序”；是人编写计算机能识别的“指令”来让计算机完成一定的任务。编程语言有很多种。C/C++语言是一种“高级语言”。它应用非常广泛；它也是许多其他语言的“母语言”——其他很多语言都是用 C/C++语言来编写的。</p>
+<h1>2. C++程序框架</h1>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span><span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">st</span><span class="pl-k">;</span>
+<span class="pl-k">int</span> <span class="pl-en">main</span>(){
+     cout&lt;&lt;<span class="pl-s"><span class="pl-pds">"</span>hello, Ni Hao!<span class="pl-pds">"</span></span>;
+}</pre></div>
+<p>解释：<br>
+第 1 行：加载头文件，头文件可以类比为一种 C++的工具箱，里面有别人已经写好的实现各种功能的函数；iostream 头文件是 C++大佬们写好的、公认的、通用的代码文件，利用它可以实现一些输入输出相关的功能。<br>
+第 3 行：命名空间。就像我们去打球要去专门的篮球场一样。命名空间定义了一种上下文的环境，我们在这个环境里编写代码。<br>
+第 5 行：main()函数。函数是一种实现某个功能的“许多行代码的集合”；main 函数又是整个 C++程序的入口。C++程序都是从这里进入执行。Main()函数之前的 int 表示“返回值”（后续会进一步介绍）<br>
+第 6 行：在 main 函数后面的一对大括号内{ },这里就可以写上我们编写的任何代码了。我们可以写很多很多行。我们以后大部分的学习都是在这里写代码了。<br>
+注意：语句后面的分号必不可少！每写完一个语句后，后面紧跟着一个分号（;）表示这一个命令的结束。C++编程并没有强制要求一行只能写一个语句，一行可以写很多的指令，只是为了阅读的方便，基本上一行写一个语句。</p>
+<h1>3. 基本语句</h1>
+<h2>3.1 输出基本语法：cout &lt;&lt; 输出内容;</h2>
+<p>例如：输出字符串（用双引号括起来的称为字符串）为：cout&lt;&lt;”你好，我是赵老师”;</p>
+<h2>3.2 enl 符号：是换行符号，输出内容后进行换行。</h2>
+<p>例如：cou&lt;&lt;“hello”&lt;&lt;endl;</p>
+<h2>3.3 输入基本语法：</h2>
+<p>cin &gt;&gt; 变量名；</p>
+<p>int apple;<br>
+cin &gt;&gt; apple;<br>
+表示：建立一个变量叫 apple;获取键盘的输入并放到 apple 这个变量里去</p>
+<h1>4. 变量：</h1>
+<p>变量是保存数据的地方。可以把变量理解为一个容器，这个容器的名字或标签就是变量名。</p>
+<h2>4.1 创建变量语法：类型 变量名</h2>
+<p>例如：int apple;<br>
+int——表明这个变量 apple 的类型是“整型”<br>
+apple——变量的名字<br>
+变量名取名的规则：<br>
+a. 变量名只能由英文字母、数字和下划线（_）组成；<br>
+b. 变量名不能以数字开头；<br>
+c. C++中的一些关键字不能作为变量名；<br>
+d. 变量名区分大小写。</p>
+<h2>4.2 变量的赋值：</h2>
+<p>变量的赋值采用等号（=）进行赋值。例如：<br>
+int apple；<br>
+apple = 10；<br>
+表示定义一个变量叫 apple，然后给它赋值为 10。注意这里的等号与数学中的等号不是完全<br>
+相同的意思。编程中的=号表示“将等号（=）右边的值赋给等号左边的变量中”！<br>
+也可以把变量的创建和赋值放在一起进行，例如：<br>
+int apple = 10；<br>
+float price = 10.5;<br>
+或者在一行定义(赋值)多个变量：<br>
+int a,b,c=100；</p>
+<h2>4.3 常见的数据类型：</h2>
+<table role="table">
+<thead>
+<tr>
+<th>数据类型</th>
+<th>关键字</th>
+<th>数据最大表示位数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>字符型</td>
+<td>char</td>
+<td>1个字符</td>
+</tr>
+<tr>
+<td>整型</td>
+<td>int</td>
+<td>10位数字（-2147483648~2147483647）</td>
+</tr>
+<tr>
+<td>长整型</td>
+<td>long long</td>
+<td>20位数字（0-18446744073709552000）</td>
+</tr>
+<tr>
+<td>单精度</td>
+<td>float</td>
+<td>小数点后最高精确到7位</td>
+</tr>
+<tr>
+<td>双精度</td>
+<td>double</td>
+<td>小数点后最高精确到16位</td>
+</tr>
+<tr>
+<td>布尔型</td>
+<td>bool</td>
+<td>0~1</td>
+</tr>
+</tbody>
+</table>
+<h2>4.4 变量的五则运算</h2>
+<p>当然“+-*/”了，还有一个独有的叫做“求余”运算——%，或称为“模运算”</p>
+<h2>除法规律总结（加减法和乘法同样适用）：</h2>
+<p>int / int = int<br>
+double / int = double<br>
+int / double = double<br>
+double / double = double</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://mcoblackmore.github.io/liuchanghui.github.io"> Leo老师在这里 </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","mcoblackmore/liuchanghui.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>
