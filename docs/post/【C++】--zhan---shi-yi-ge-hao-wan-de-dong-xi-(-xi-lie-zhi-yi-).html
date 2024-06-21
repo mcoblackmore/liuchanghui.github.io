@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 栈是什么
+
+“栈”（读音“zhan”）是计算机科学里最重要且最基础的数据结构之一，英文名：stack；它与堆(HEAP), 队列(QUEUE) 都是学习计算机的人都必须知道的数据结构！如果你问一个人，他居然不知道“栈”是什么？那么你大概可以判断：他没有学过计算机，或者即使学过，也只是学习了皮毛而已。">
+<meta property="og:title" content="【C++】"栈"是一个好玩的东西(系列之一)">
+<meta property="og:description" content="# 栈是什么
+
+“栈”（读音“zhan”）是计算机科学里最重要且最基础的数据结构之一，英文名：stack；它与堆(HEAP), 队列(QUEUE) 都是学习计算机的人都必须知道的数据结构！如果你问一个人，他居然不知道“栈”是什么？那么你大概可以判断：他没有学过计算机，或者即使学过，也只是学习了皮毛而已。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mcoblackmore.github.io/liuchanghui.github.io/post/%E3%80%90C%2B%2B%E3%80%91--zhan---shi-yi-ge-hao-wan-de-dong-xi-%28-xi-lie-zhi-yi-%29.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>【C++】"栈"是一个好玩的东西(系列之一)</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">【C++】"栈"是一个好玩的东西(系列之一)</h1>
+<div class="title-right">
+    <a href="https://mcoblackmore.github.io/liuchanghui.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/mcoblackmore/liuchanghui.github.io/issues/3" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>栈是什么</h1>
+<p>“栈”（读音“zhan”）是计算机科学里最重要且最基础的数据结构之一，英文名：stack；它与堆(HEAP), 队列(QUEUE) 都是学习计算机的人都必须知道的数据结构！如果你问一个人，他居然不知道“栈”是什么？那么你大概可以判断：他没有学过计算机，或者即使学过，也只是学习了皮毛而已。</p>
+<h1>栈的一个很重要的特点</h1>
+<p>先进后出: FILO（First In Last Out）的原则存储数据。你可以参考如下的动图，其实，你可以把“栈”想象成一个“薯片的圆筒”——你可以把薯片一个一个的放进去，最先放的那个薯片一定是放到圆筒的最底层；当你想吃的时候，你从上面开始一个一个拿着吃，那么你最先拿出来的一定是“最后放进去”的！这就是“先进后出”。我想有生活经验的人一定能理解！<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/bf74f900-ae11-4f81-bd54-6d6cedd18b5e"><img src="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/bf74f900-ae11-4f81-bd54-6d6cedd18b5e" alt="zhan" style="max-width: 100%;"></a></p>
+<p>现在用专业的语言来解释：栈按照先进后出的原则存储数据，先进入的数据被压入栈底，最后的数据在栈顶,需要读数据的时候从栈顶开始弹出数据（最后一个数据被第一个读出来）。你参考如下的图片：<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/ea3664c2-4d83-4a89-8337-70639fcbcac4"><img src="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/ea3664c2-4d83-4a89-8337-70639fcbcac4" alt="stack_1" style="max-width: 100%;"></a></p>
+<h1>如何实现“栈”</h1>
+<p>"栈"这种思想——先进后出（或者后进先出），我们可以用很多东西实现栈这种思想：比如说用普通的数组解决、用动态数组解决、或用STL(标准模板库)里的stack直接解决！都可以！</p>
+<h2>栈的最朴素的一个实现方法</h2>
+<p>通过一个用“栈”的思想解决的问题，我们来说明下，比如：表达式括号匹配问题。这个问题是：</p>
+<blockquote>
+<p>假设一个表达式由英文字母(小写)、运算符(十,一,<em>,/)和左有小(圆)括号构成，以“@”作为表达式<br>
+的结束符。请编写一个程序检查表达式中的左右圆括号是否匹配，若匹配则返回“YES”;否则返回“NO”。<br>
+表达式长度小于255,左圆括号少于 20 个。<br>
+输入:<br>
+输入文件 stack.in 包括一行数据,即表达式。<br>
+输出：<br>
+输出文件 stack.out 包括一行,即“YES”或“NO”<br>
+样例输入:<br>
+样例1:<br>
+2</em>(x十y)/(1-x)@<br>
+样例 2:<br>
+(25十x)*(ax(a+b+b)@<br>
+样例输出:<br>
+样例 1:<br>
+YES<br>
+样例 2:<br>
+NO</p>
+</blockquote>
+<p>要解决这个问题，我们首先要抽丝剥茧——理解“栈”的精髓——就是几个操作而已：入栈、出栈、查看栈顶元素等。大家看到上图中有个指向栈顶的指针，我给它命名为t。这个很重要！上题要解决的是“左右圆括号是否匹配”的问题。那么我可以这么想：最开始的时候，我假设t=0, 然后我一个一个读入字符串里的每个元素，如果遇到了左括号，就让t++(自增1)，如果遇到了右括号，就让t--(自减1)。那么，如果表达式里的左右括号是成对匹配的，必然最后t=0了! 这一点看看自己能够想明白不？如果扫描完整个表达式，最终t不等于0，那么肯定有不匹配的括号！所以我们就用这种想法就能写出简单的代码解决上面的问题：</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span>左右括号匹配： </span>
+#<span class="pl-k">include</span><span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+<span class="pl-k">char</span> a[<span class="pl-c1">10001</span>];
+<span class="pl-k">int</span> i=<span class="pl-c1">0</span>;
+<span class="pl-k">int</span> tot=<span class="pl-c1">0</span>;
+<span class="pl-k">int</span> <span class="pl-en">main</span>(){
+	<span class="pl-c1">scanf</span>(<span class="pl-s"><span class="pl-pds">"</span>%s<span class="pl-pds">"</span></span>,&amp;a); <span class="pl-c"><span class="pl-c">//</span>输入表达式；(2+3)*(47-5)@</span>
+<span class="pl-c"><span class="pl-c">//</span>	cin&gt;&gt;a;   //第二种方式；</span>
+<span class="pl-c"><span class="pl-c">//</span>	cin.getline(a,256);</span>
+	<span class="pl-k">while</span>(a[i]!=<span class="pl-s"><span class="pl-pds">'</span>@<span class="pl-pds">'</span></span>){
+		<span class="pl-c"><span class="pl-c">//</span>如果遇到左括号就“入栈”</span>
+		<span class="pl-k">if</span>(a[i]==<span class="pl-s"><span class="pl-pds">'</span>(<span class="pl-pds">'</span></span>)	tot++; <span class="pl-c"><span class="pl-c">//</span>模拟入栈动作</span>
+		<span class="pl-k">if</span>(a[i]==<span class="pl-s"><span class="pl-pds">'</span>)<span class="pl-pds">'</span></span>) {
+                        <span class="pl-c"><span class="pl-c">//</span>过滤那些“先写右括号”的</span>
+			<span class="pl-k">if</span>(tot&gt;<span class="pl-c1">0</span>) 	 tot--;
+			<span class="pl-k">else</span>{
+				tot--;
+				<span class="pl-k">break</span>;
+			}	
+		}
+		i++;
+	}
+	<span class="pl-k">if</span>(tot!=<span class="pl-c1">0</span>)	cout&lt;&lt;<span class="pl-s"><span class="pl-pds">"</span>NO<span class="pl-pds">"</span></span>;
+	<span class="pl-k">else</span>	cout&lt;&lt;<span class="pl-s"><span class="pl-pds">"</span>YES<span class="pl-pds">"</span></span>;
+} </pre></div>
+<p>这是一种“最意象”的模拟栈的实现。（未完待续）</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://mcoblackmore.github.io/liuchanghui.github.io"> Leo老师在这里 </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","mcoblackmore/liuchanghui.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>
