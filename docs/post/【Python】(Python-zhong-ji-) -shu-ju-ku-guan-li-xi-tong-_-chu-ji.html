@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 项目要点
+
+Python tkinter界面 + sqlite3数据库
+
+# 项目文件
+
+- lab.py: 主程序
+- database.py: sqlite3数据库基本操作，包含建表、查表、插入、删除、更新、查询id存在性
+- Employees.db:默认操作的sqlite3数据库
+
+# 项目界面
+
+<img width='677' alt='sf' src='https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/2b2d38fd-67ce-4563-a7cf-7a0f72a8f51d'>
+
+# 项目文件
+[lab.py.pdf](https://github.com/user-attachments/files/15956051/lab.py.pdf)
+[database.py.pdf](https://github.com/user-attachments/files/15956057/database.py.pdf)
+
+# 项目代码
+
+## database.py
+
+```Python
+import sqlite3
+def create_table():
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Employees(
+                   id TEXT PRIMARY KEY,
+                   name TEXT,
+                   role TEXT,
+                   gender TEXT,
+                   status TEXT)''')
+    conn.commit()
+    conn.close()
+
+def fetch_employees():
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Employees')
+    employees = cursor.fetchall()
+    conn.close()
+    return employees
+def insert_employee(id, name, role, gender, status):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO Employees(id, name, role, gender, status) VALUES(?,?,?,?,?)', 
+                   (id, name, role, gender, status))
+    conn.commit()
+    conn.close()
+
+def delete_employee(id):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM Employees WHERE id=?', (id,))
+    conn.commit()
+    conn.close()
+def update_employee(new_name, new_role, new_gender, new_status, id):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('UPDATE Employees SET name=?, role=?, gender=?, status=? WHERE id=?', 
+                   (new_name, new_role, new_gender, new_status, id))
+    conn.commit()
+    conn.close()
+def id_exists(id):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT count(*) FROM Employees WHERE id=?', (id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result[0] > 0
+
+create_table()
+
+```
+
+## lab.py
+
+```Python
+import customtkinter # 导入customtkinter库,这个好看的库
+from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk
+import tkinter as tk
+import database
+from PIL import ImageTk,Image
+
+app = customtkinter.CTk()  # 这个是创建了一个CTk对象，用来创建窗口
+app.title('Employee Management System')
+app.geometry('900x420')
+app.config(bg='#161c25')
+app.resizable(False, False)
+
+font1 = ('Arial',20,'bold')
+font2 = ('Arial',12,'bold')
+# 添加到树视图
+def add_to_treeview():
+    emplyees = database.fetch_employees()
+    tree.delete(*tree.get_children())
+    for employee in emplyees:
+        tree.insert('', END, values=employee)
+# 清空树视图输入框
+def clear(*clicked):
+    if clicked:
+        tree.selection_remove(tree.focus())
+        tree.focus('') # 取消选中状态
+    id_entry1.delete(0, END)
+    name_entry.delete(0, END)
+    role_entry.delete(0, END)
+    variable1.set('男')
+    status_entry.delete(0, END)
+
+def display_data(event):#等待树视图双击事件
+    selected_item = tree.focus()
+    if selected_item:
+        row = tree.item(selected_item)['values']
+        clear() # 清空输入框所有内容
+        id_entry1.insert(0, row[0])
+        name_entry.insert(0, row[1])
+        role_entry.insert(0, row[2])
+        variable1.set(row[3])
+        status_entry.insert(0, row[4])
+    else:
+        pass
+def delete():
+    selected_item = tree.focus()
+    if not selected_item:
+        messagebox.showerror('Error', '请选择要删除的员工')
+    else:
+        id = id_entry1.get()
+        database.delete_employee(id) # 删除数据库中的数据
+        add_to_treeview() # 更新树视图
+        clear() # 清空输入框所有内容
+        messagebox.showinfo('Success', '删除成功')
+
+def update():
+    selected_item = tree.focus()
+    if not selected_item:
+        messagebox.showerror('Error', '请选择要更新的员工')
+    else:
+        id = id_entry1.get()
+        name = name_entry.get()
+        role = role_entry.get()
+        gender = variable1.get()
+        status = status_entry.get()
+        database.update_employee(name, role, gender, status,id) # 更新数据库中的数据
+        add_to_treeview() # 更新树视图
+        clear() # 清空输入框所有内容
+        messagebox.showinfo('牛逼', '更新成功')
+
+
+# 插入数据
+def insert():
+    id = id_entry1.get()
+    name = name_entry.get()
+    role = role_entry.get()
+    gender = variable1.get()
+    status = status_entry.get()
+    if not(id and name and role and gender and status):
+        messagebox.showerror('Error', '请填充所有的值')
+    elif database.id_exists(id):
+        messagebox.showerror('Error', 'ID已存在')
+    else:
+        database.insert_employee(id, name, role, gender, status)
+        add_to_treeview()
+        clear()
+        messagebox.showinfo('Success', '添加成功')
+        #clear_input()
+        
+################################################
+
+
+top = PhotoImage(file='lfcg1.png')
+top_image = Label(app, image=top, bg='#f0f1f5')
+top_image.place(x=30, y=30)
+
+title = customtkinter.CTkLabel(app, font=font1, text='精神病院员工管理系统', 
+                               text_color='#fff',bg_color='#161c25')
+title.place(x=60, y=30)
+
+id_label1 = customtkinter.CTkLabel(app, font=font1, text='编  号:', 
+                                   text_color='#fff',bg_color='#161c25')
+id_label1.place(x=20, y=80)
+
+id_entry1 = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                   fg_color='#fff',border_color='#0c9295',
+                                   border_width=2,width=180)
+id_entry1.place(x=100, y=80)
+
+name_label = customtkinter.CTkLabel(app, font=font1, text='姓  名:', 
+                                    text_color='#fff',bg_color='#161c25')
+name_label.place(x=20, y=120)
+
+name_entry = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                   fg_color='#fff',border_color='#0c9295',
+                                   border_width=2,width=180)
+name_entry.place(x=100, y=120)
+
+role_label = customtkinter.CTkLabel(app, font=font1, text='角  色:', 
+                                    text_color='#fff',bg_color='#161c25')
+role_label.place(x=20, y=160)
+
+role_entry = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                   fg_color='#fff',border_color='#0c9295',
+                                   border_width=2,width=180)
+role_entry.place(x=100, y=160)
+
+gender_label = customtkinter.CTkLabel(app, font=font1, text='性  别:', 
+                                      text_color='#fff',bg_color='#161c25')
+gender_label.place(x=20, y=200)
+
+options = ['男', '女', '跨性别']
+variable1=StringVar()
+
+gender_options = customtkinter.CTkComboBox(app,font=font1,
+                                           text_color='#000',fg_color='#fff',
+                                           dropdown_hover_color='#0c9295',button_color='#0c9295',
+                                           button_hover_color='#0c9295',border_color='#0c9295',
+                                           width=180,variable=variable1,values=options,state='readonly')
+gender_options.set('男')
+gender_options.place(x=100, y=200)
+
+status_label = customtkinter.CTkLabel(app, font=font1, text='当前状态:', 
+                                       text_color='#fff',bg_color='#161c25')
+status_label.place(x=20, y=240)
+
+status_entry = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                      fg_color='#fff',border_color='#0c9295',
+                                      border_width=2,width=180)
+status_entry.place(x=100, y=240)
+#############################BUTTON按钮###################################
+add_button = customtkinter.CTkButton(app,command=insert, text='添加员工', font=font1, 
+                                     text_color='#fff',fg_color='#05a312',
+                                     hover_color='#00850b',bg_color='#161c25',
+                                     cursor='hand2',corner_radius=15,width=260
+                                     )
+add_button.place(x=20, y=310)
+
+clear_button = customtkinter.CTkButton(app, command=lambda:clear(True), text='清空输入框', font=font1, 
+                                       text_color='#fff',fg_color='#05a312',
+                                       hover_color='#00850b',bg_color='#161c25',
+                                       cursor='hand2',corner_radius=15,width=260
+                                       )
+clear_button.place(x=20, y=360)
+
+update_button = customtkinter.CTkButton(app, command=update, text='更新信息', font=font1, 
+                                         text_color='#fff',fg_color='#05a312',
+                                          hover_color='#00850b',bg_color='#161c25',
+                                           cursor='hand2',corner_radius=15,width=260)
+update_button.place(x=300, y=360)
+
+delete_button = customtkinter.CTkButton(app,command=delete, text='删除员工', font=font1, 
+                                         text_color='#fff',fg_color='red',
+                                          hover_color='#00850b',bg_color='#161c25',
+                                           cursor='hand2',corner_radius=15,width=260)
+delete_button.place(x=580, y=360)
+#####################################
+style = ttk.Style(app)
+style.theme_use('clam')
+style.configure('Treeview', font=font2, rowheight=30, 
+                fieldbackground='#161c25', background='#fff', foreground='#000')
+style.map('Treeview', background=[('selected', '#1a8f2d')])
+tree = ttk.Treeview(app, height=15)
+tree['columns'] = ('ID', 'Name', 'Role', 'Gender', 'Status')
+tree.column('#0', width=0, stretch=tk.NO) # 这个是设置第一列的宽度
+tree.column('ID', anchor=tk.CENTER, width=80)# 这个是设置第二列的宽度
+tree.column('Name', anchor=tk.CENTER, width=170)
+tree.column('Role', anchor=tk.CENTER, width=170)
+tree.column('Gender', anchor=tk.CENTER, width=170)
+tree.column('Status', anchor=tk.CENTER, width=170)
+
+tree.heading('#0', text='ID')  #这个是设置表头的名字
+tree.heading('ID', text='ID')
+tree.heading('Name', text='Name')
+tree.heading('Role', text='Role')
+tree.heading('Gender', text='Gender')
+tree.heading('Status', text='Status')
+
+tree.place(x=500, y=20)
+tree.bind('<ButtonRelease>',display_data)
+add_to_treeview()
+
+app.mainloop()
+
+```。">
+<meta property="og:title" content="【Python】(Python中级) 数据库管理系统_初级">
+<meta property="og:description" content="# 项目要点
+
+Python tkinter界面 + sqlite3数据库
+
+# 项目文件
+
+- lab.py: 主程序
+- database.py: sqlite3数据库基本操作，包含建表、查表、插入、删除、更新、查询id存在性
+- Employees.db:默认操作的sqlite3数据库
+
+# 项目界面
+
+<img width='677' alt='sf' src='https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/2b2d38fd-67ce-4563-a7cf-7a0f72a8f51d'>
+
+# 项目文件
+[lab.py.pdf](https://github.com/user-attachments/files/15956051/lab.py.pdf)
+[database.py.pdf](https://github.com/user-attachments/files/15956057/database.py.pdf)
+
+# 项目代码
+
+## database.py
+
+```Python
+import sqlite3
+def create_table():
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Employees(
+                   id TEXT PRIMARY KEY,
+                   name TEXT,
+                   role TEXT,
+                   gender TEXT,
+                   status TEXT)''')
+    conn.commit()
+    conn.close()
+
+def fetch_employees():
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Employees')
+    employees = cursor.fetchall()
+    conn.close()
+    return employees
+def insert_employee(id, name, role, gender, status):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO Employees(id, name, role, gender, status) VALUES(?,?,?,?,?)', 
+                   (id, name, role, gender, status))
+    conn.commit()
+    conn.close()
+
+def delete_employee(id):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM Employees WHERE id=?', (id,))
+    conn.commit()
+    conn.close()
+def update_employee(new_name, new_role, new_gender, new_status, id):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('UPDATE Employees SET name=?, role=?, gender=?, status=? WHERE id=?', 
+                   (new_name, new_role, new_gender, new_status, id))
+    conn.commit()
+    conn.close()
+def id_exists(id):
+    conn = sqlite3.connect('Employees.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT count(*) FROM Employees WHERE id=?', (id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result[0] > 0
+
+create_table()
+
+```
+
+## lab.py
+
+```Python
+import customtkinter # 导入customtkinter库,这个好看的库
+from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk
+import tkinter as tk
+import database
+from PIL import ImageTk,Image
+
+app = customtkinter.CTk()  # 这个是创建了一个CTk对象，用来创建窗口
+app.title('Employee Management System')
+app.geometry('900x420')
+app.config(bg='#161c25')
+app.resizable(False, False)
+
+font1 = ('Arial',20,'bold')
+font2 = ('Arial',12,'bold')
+# 添加到树视图
+def add_to_treeview():
+    emplyees = database.fetch_employees()
+    tree.delete(*tree.get_children())
+    for employee in emplyees:
+        tree.insert('', END, values=employee)
+# 清空树视图输入框
+def clear(*clicked):
+    if clicked:
+        tree.selection_remove(tree.focus())
+        tree.focus('') # 取消选中状态
+    id_entry1.delete(0, END)
+    name_entry.delete(0, END)
+    role_entry.delete(0, END)
+    variable1.set('男')
+    status_entry.delete(0, END)
+
+def display_data(event):#等待树视图双击事件
+    selected_item = tree.focus()
+    if selected_item:
+        row = tree.item(selected_item)['values']
+        clear() # 清空输入框所有内容
+        id_entry1.insert(0, row[0])
+        name_entry.insert(0, row[1])
+        role_entry.insert(0, row[2])
+        variable1.set(row[3])
+        status_entry.insert(0, row[4])
+    else:
+        pass
+def delete():
+    selected_item = tree.focus()
+    if not selected_item:
+        messagebox.showerror('Error', '请选择要删除的员工')
+    else:
+        id = id_entry1.get()
+        database.delete_employee(id) # 删除数据库中的数据
+        add_to_treeview() # 更新树视图
+        clear() # 清空输入框所有内容
+        messagebox.showinfo('Success', '删除成功')
+
+def update():
+    selected_item = tree.focus()
+    if not selected_item:
+        messagebox.showerror('Error', '请选择要更新的员工')
+    else:
+        id = id_entry1.get()
+        name = name_entry.get()
+        role = role_entry.get()
+        gender = variable1.get()
+        status = status_entry.get()
+        database.update_employee(name, role, gender, status,id) # 更新数据库中的数据
+        add_to_treeview() # 更新树视图
+        clear() # 清空输入框所有内容
+        messagebox.showinfo('牛逼', '更新成功')
+
+
+# 插入数据
+def insert():
+    id = id_entry1.get()
+    name = name_entry.get()
+    role = role_entry.get()
+    gender = variable1.get()
+    status = status_entry.get()
+    if not(id and name and role and gender and status):
+        messagebox.showerror('Error', '请填充所有的值')
+    elif database.id_exists(id):
+        messagebox.showerror('Error', 'ID已存在')
+    else:
+        database.insert_employee(id, name, role, gender, status)
+        add_to_treeview()
+        clear()
+        messagebox.showinfo('Success', '添加成功')
+        #clear_input()
+        
+################################################
+
+
+top = PhotoImage(file='lfcg1.png')
+top_image = Label(app, image=top, bg='#f0f1f5')
+top_image.place(x=30, y=30)
+
+title = customtkinter.CTkLabel(app, font=font1, text='精神病院员工管理系统', 
+                               text_color='#fff',bg_color='#161c25')
+title.place(x=60, y=30)
+
+id_label1 = customtkinter.CTkLabel(app, font=font1, text='编  号:', 
+                                   text_color='#fff',bg_color='#161c25')
+id_label1.place(x=20, y=80)
+
+id_entry1 = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                   fg_color='#fff',border_color='#0c9295',
+                                   border_width=2,width=180)
+id_entry1.place(x=100, y=80)
+
+name_label = customtkinter.CTkLabel(app, font=font1, text='姓  名:', 
+                                    text_color='#fff',bg_color='#161c25')
+name_label.place(x=20, y=120)
+
+name_entry = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                   fg_color='#fff',border_color='#0c9295',
+                                   border_width=2,width=180)
+name_entry.place(x=100, y=120)
+
+role_label = customtkinter.CTkLabel(app, font=font1, text='角  色:', 
+                                    text_color='#fff',bg_color='#161c25')
+role_label.place(x=20, y=160)
+
+role_entry = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                   fg_color='#fff',border_color='#0c9295',
+                                   border_width=2,width=180)
+role_entry.place(x=100, y=160)
+
+gender_label = customtkinter.CTkLabel(app, font=font1, text='性  别:', 
+                                      text_color='#fff',bg_color='#161c25')
+gender_label.place(x=20, y=200)
+
+options = ['男', '女', '跨性别']
+variable1=StringVar()
+
+gender_options = customtkinter.CTkComboBox(app,font=font1,
+                                           text_color='#000',fg_color='#fff',
+                                           dropdown_hover_color='#0c9295',button_color='#0c9295',
+                                           button_hover_color='#0c9295',border_color='#0c9295',
+                                           width=180,variable=variable1,values=options,state='readonly')
+gender_options.set('男')
+gender_options.place(x=100, y=200)
+
+status_label = customtkinter.CTkLabel(app, font=font1, text='当前状态:', 
+                                       text_color='#fff',bg_color='#161c25')
+status_label.place(x=20, y=240)
+
+status_entry = customtkinter.CTkEntry(app, font=font1, text_color='#000',
+                                      fg_color='#fff',border_color='#0c9295',
+                                      border_width=2,width=180)
+status_entry.place(x=100, y=240)
+#############################BUTTON按钮###################################
+add_button = customtkinter.CTkButton(app,command=insert, text='添加员工', font=font1, 
+                                     text_color='#fff',fg_color='#05a312',
+                                     hover_color='#00850b',bg_color='#161c25',
+                                     cursor='hand2',corner_radius=15,width=260
+                                     )
+add_button.place(x=20, y=310)
+
+clear_button = customtkinter.CTkButton(app, command=lambda:clear(True), text='清空输入框', font=font1, 
+                                       text_color='#fff',fg_color='#05a312',
+                                       hover_color='#00850b',bg_color='#161c25',
+                                       cursor='hand2',corner_radius=15,width=260
+                                       )
+clear_button.place(x=20, y=360)
+
+update_button = customtkinter.CTkButton(app, command=update, text='更新信息', font=font1, 
+                                         text_color='#fff',fg_color='#05a312',
+                                          hover_color='#00850b',bg_color='#161c25',
+                                           cursor='hand2',corner_radius=15,width=260)
+update_button.place(x=300, y=360)
+
+delete_button = customtkinter.CTkButton(app,command=delete, text='删除员工', font=font1, 
+                                         text_color='#fff',fg_color='red',
+                                          hover_color='#00850b',bg_color='#161c25',
+                                           cursor='hand2',corner_radius=15,width=260)
+delete_button.place(x=580, y=360)
+#####################################
+style = ttk.Style(app)
+style.theme_use('clam')
+style.configure('Treeview', font=font2, rowheight=30, 
+                fieldbackground='#161c25', background='#fff', foreground='#000')
+style.map('Treeview', background=[('selected', '#1a8f2d')])
+tree = ttk.Treeview(app, height=15)
+tree['columns'] = ('ID', 'Name', 'Role', 'Gender', 'Status')
+tree.column('#0', width=0, stretch=tk.NO) # 这个是设置第一列的宽度
+tree.column('ID', anchor=tk.CENTER, width=80)# 这个是设置第二列的宽度
+tree.column('Name', anchor=tk.CENTER, width=170)
+tree.column('Role', anchor=tk.CENTER, width=170)
+tree.column('Gender', anchor=tk.CENTER, width=170)
+tree.column('Status', anchor=tk.CENTER, width=170)
+
+tree.heading('#0', text='ID')  #这个是设置表头的名字
+tree.heading('ID', text='ID')
+tree.heading('Name', text='Name')
+tree.heading('Role', text='Role')
+tree.heading('Gender', text='Gender')
+tree.heading('Status', text='Status')
+
+tree.place(x=500, y=20)
+tree.bind('<ButtonRelease>',display_data)
+add_to_treeview()
+
+app.mainloop()
+
+```。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mcoblackmore.github.io/liuchanghui.github.io/post/%E3%80%90Python%E3%80%91%28Python-zhong-ji-%29%20-shu-ju-ku-guan-li-xi-tong-_-chu-ji.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
+<title>【Python】(Python中级) 数据库管理系统_初级</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">【Python】(Python中级) 数据库管理系统_初级</h1>
+<div class="title-right">
+    <a href="https://mcoblackmore.github.io/liuchanghui.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/mcoblackmore/liuchanghui.github.io/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>项目要点</h1>
+<p>Python tkinter界面 + sqlite3数据库</p>
+<h1>项目文件</h1>
+<ul>
+<li>lab.py: 主程序</li>
+<li>database.py: sqlite3数据库基本操作，包含建表、查表、插入、删除、更新、查询id存在性</li>
+<li>Employees.db:默认操作的sqlite3数据库</li>
+</ul>
+<h1>项目界面</h1>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/2b2d38fd-67ce-4563-a7cf-7a0f72a8f51d"><img width="677" alt="sf" src="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/2b2d38fd-67ce-4563-a7cf-7a0f72a8f51d" style="max-width: 100%;"></a></p>
+<h1>项目文件</h1>
+<p><a href="https://github.com/user-attachments/files/15956051/lab.py.pdf">lab.py.pdf</a><br>
+<a href="https://github.com/user-attachments/files/15956057/database.py.pdf">database.py.pdf</a></p>
+<h1>项目代码</h1>
+<h2>database.py</h2>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">sqlite3</span>
+<span class="pl-k">def</span> <span class="pl-en">create_table</span>():
+    <span class="pl-s1">conn</span> <span class="pl-c1">=</span> <span class="pl-s1">sqlite3</span>.<span class="pl-en">connect</span>(<span class="pl-s">'Employees.db'</span>)
+    <span class="pl-s1">cursor</span> <span class="pl-c1">=</span> <span class="pl-s1">conn</span>.<span class="pl-en">cursor</span>()
+    <span class="pl-s1">cursor</span>.<span class="pl-en">execute</span>(<span class="pl-s">'''CREATE TABLE IF NOT EXISTS Employees(</span>
+<span class="pl-s">                   id TEXT PRIMARY KEY,</span>
+<span class="pl-s">                   name TEXT,</span>
+<span class="pl-s">                   role TEXT,</span>
+<span class="pl-s">                   gender TEXT,</span>
+<span class="pl-s">                   status TEXT)'''</span>)
+    <span class="pl-s1">conn</span>.<span class="pl-en">commit</span>()
+    <span class="pl-s1">conn</span>.<span class="pl-en">close</span>()
+
+<span class="pl-k">def</span> <span class="pl-en">fetch_employees</span>():
+    <span class="pl-s1">conn</span> <span class="pl-c1">=</span> <span class="pl-s1">sqlite3</span>.<span class="pl-en">connect</span>(<span class="pl-s">'Employees.db'</span>)
+    <span class="pl-s1">cursor</span> <span class="pl-c1">=</span> <span class="pl-s1">conn</span>.<span class="pl-en">cursor</span>()
+    <span class="pl-s1">cursor</span>.<span class="pl-en">execute</span>(<span class="pl-s">"SELECT * FROM Employees"</span>)
+    <span class="pl-s1">employees</span> <span class="pl-c1">=</span> <span class="pl-s1">cursor</span>.<span class="pl-en">fetchall</span>()
+    <span class="pl-s1">conn</span>.<span class="pl-en">close</span>()
+    <span class="pl-k">return</span> <span class="pl-s1">employees</span>
+<span class="pl-k">def</span> <span class="pl-en">insert_employee</span>(<span class="pl-s1">id</span>, <span class="pl-s1">name</span>, <span class="pl-s1">role</span>, <span class="pl-s1">gender</span>, <span class="pl-s1">status</span>):
+    <span class="pl-s1">conn</span> <span class="pl-c1">=</span> <span class="pl-s1">sqlite3</span>.<span class="pl-en">connect</span>(<span class="pl-s">'Employees.db'</span>)
+    <span class="pl-s1">cursor</span> <span class="pl-c1">=</span> <span class="pl-s1">conn</span>.<span class="pl-en">cursor</span>()
+    <span class="pl-s1">cursor</span>.<span class="pl-en">execute</span>(<span class="pl-s">"INSERT INTO Employees(id, name, role, gender, status) VALUES(?,?,?,?,?)"</span>, 
+                   (<span class="pl-s1">id</span>, <span class="pl-s1">name</span>, <span class="pl-s1">role</span>, <span class="pl-s1">gender</span>, <span class="pl-s1">status</span>))
+    <span class="pl-s1">conn</span>.<span class="pl-en">commit</span>()
+    <span class="pl-s1">conn</span>.<span class="pl-en">close</span>()
+
+<span class="pl-k">def</span> <span class="pl-en">delete_employee</span>(<span class="pl-s1">id</span>):
+    <span class="pl-s1">conn</span> <span class="pl-c1">=</span> <span class="pl-s1">sqlite3</span>.<span class="pl-en">connect</span>(<span class="pl-s">'Employees.db'</span>)
+    <span class="pl-s1">cursor</span> <span class="pl-c1">=</span> <span class="pl-s1">conn</span>.<span class="pl-en">cursor</span>()
+    <span class="pl-s1">cursor</span>.<span class="pl-en">execute</span>(<span class="pl-s">"DELETE FROM Employees WHERE id=?"</span>, (<span class="pl-s1">id</span>,))
+    <span class="pl-s1">conn</span>.<span class="pl-en">commit</span>()
+    <span class="pl-s1">conn</span>.<span class="pl-en">close</span>()
+<span class="pl-k">def</span> <span class="pl-en">update_employee</span>(<span class="pl-s1">new_name</span>, <span class="pl-s1">new_role</span>, <span class="pl-s1">new_gender</span>, <span class="pl-s1">new_status</span>, <span class="pl-s1">id</span>):
+    <span class="pl-s1">conn</span> <span class="pl-c1">=</span> <span class="pl-s1">sqlite3</span>.<span class="pl-en">connect</span>(<span class="pl-s">'Employees.db'</span>)
+    <span class="pl-s1">cursor</span> <span class="pl-c1">=</span> <span class="pl-s1">conn</span>.<span class="pl-en">cursor</span>()
+    <span class="pl-s1">cursor</span>.<span class="pl-en">execute</span>(<span class="pl-s">"UPDATE Employees SET name=?, role=?, gender=?, status=? WHERE id=?"</span>, 
+                   (<span class="pl-s1">new_name</span>, <span class="pl-s1">new_role</span>, <span class="pl-s1">new_gender</span>, <span class="pl-s1">new_status</span>, <span class="pl-s1">id</span>))
+    <span class="pl-s1">conn</span>.<span class="pl-en">commit</span>()
+    <span class="pl-s1">conn</span>.<span class="pl-en">close</span>()
+<span class="pl-k">def</span> <span class="pl-en">id_exists</span>(<span class="pl-s1">id</span>):
+    <span class="pl-s1">conn</span> <span class="pl-c1">=</span> <span class="pl-s1">sqlite3</span>.<span class="pl-en">connect</span>(<span class="pl-s">'Employees.db'</span>)
+    <span class="pl-s1">cursor</span> <span class="pl-c1">=</span> <span class="pl-s1">conn</span>.<span class="pl-en">cursor</span>()
+    <span class="pl-s1">cursor</span>.<span class="pl-en">execute</span>(<span class="pl-s">"SELECT count(*) FROM Employees WHERE id=?"</span>, (<span class="pl-s1">id</span>,))
+    <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">cursor</span>.<span class="pl-en">fetchone</span>()
+    <span class="pl-s1">conn</span>.<span class="pl-en">close</span>()
+    <span class="pl-k">return</span> <span class="pl-s1">result</span>[<span class="pl-c1">0</span>] <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span>
+
+<span class="pl-en">create_table</span>()</pre></div>
+<h2>lab.py</h2>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">customtkinter</span> <span class="pl-c"># 导入customtkinter库,这个好看的库</span>
+<span class="pl-k">from</span> <span class="pl-s1">tkinter</span> <span class="pl-k">import</span> <span class="pl-c1">*</span>
+<span class="pl-k">from</span> <span class="pl-s1">tkinter</span> <span class="pl-k">import</span> <span class="pl-s1">messagebox</span>
+<span class="pl-k">from</span> <span class="pl-s1">tkinter</span> <span class="pl-k">import</span> <span class="pl-s1">ttk</span>
+<span class="pl-k">import</span> <span class="pl-s1">tkinter</span> <span class="pl-k">as</span> <span class="pl-s1">tk</span>
+<span class="pl-k">import</span> <span class="pl-s1">database</span>
+<span class="pl-k">from</span> <span class="pl-v">PIL</span> <span class="pl-k">import</span> <span class="pl-v">ImageTk</span>,<span class="pl-v">Image</span>
+
+<span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTk</span>()  <span class="pl-c"># 这个是创建了一个CTk对象，用来创建窗口</span>
+<span class="pl-s1">app</span>.<span class="pl-en">title</span>(<span class="pl-s">"Employee Management System"</span>)
+<span class="pl-s1">app</span>.<span class="pl-en">geometry</span>(<span class="pl-s">"900x420"</span>)
+<span class="pl-s1">app</span>.<span class="pl-en">config</span>(<span class="pl-s1">bg</span><span class="pl-c1">=</span><span class="pl-s">'#161c25'</span>)
+<span class="pl-s1">app</span>.<span class="pl-en">resizable</span>(<span class="pl-c1">False</span>, <span class="pl-c1">False</span>)
+
+<span class="pl-s1">font1</span> <span class="pl-c1">=</span> (<span class="pl-s">'Arial'</span>,<span class="pl-c1">20</span>,<span class="pl-s">'bold'</span>)
+<span class="pl-s1">font2</span> <span class="pl-c1">=</span> (<span class="pl-s">'Arial'</span>,<span class="pl-c1">12</span>,<span class="pl-s">'bold'</span>)
+<span class="pl-c"># 添加到树视图</span>
+<span class="pl-k">def</span> <span class="pl-en">add_to_treeview</span>():
+    <span class="pl-s1">emplyees</span> <span class="pl-c1">=</span> <span class="pl-s1">database</span>.<span class="pl-en">fetch_employees</span>()
+    <span class="pl-s1">tree</span>.<span class="pl-en">delete</span>(<span class="pl-c1">*</span><span class="pl-s1">tree</span>.<span class="pl-en">get_children</span>())
+    <span class="pl-k">for</span> <span class="pl-s1">employee</span> <span class="pl-c1">in</span> <span class="pl-s1">emplyees</span>:
+        <span class="pl-s1">tree</span>.<span class="pl-en">insert</span>(<span class="pl-s">''</span>, <span class="pl-v">END</span>, <span class="pl-s1">values</span><span class="pl-c1">=</span><span class="pl-s1">employee</span>)
+<span class="pl-c"># 清空树视图输入框</span>
+<span class="pl-k">def</span> <span class="pl-en">clear</span>(<span class="pl-c1">*</span><span class="pl-s1">clicked</span>):
+    <span class="pl-k">if</span> <span class="pl-s1">clicked</span>:
+        <span class="pl-s1">tree</span>.<span class="pl-en">selection_remove</span>(<span class="pl-s1">tree</span>.<span class="pl-en">focus</span>())
+        <span class="pl-s1">tree</span>.<span class="pl-en">focus</span>(<span class="pl-s">''</span>) <span class="pl-c"># 取消选中状态</span>
+    <span class="pl-s1">id_entry1</span>.<span class="pl-en">delete</span>(<span class="pl-c1">0</span>, <span class="pl-v">END</span>)
+    <span class="pl-s1">name_entry</span>.<span class="pl-en">delete</span>(<span class="pl-c1">0</span>, <span class="pl-v">END</span>)
+    <span class="pl-s1">role_entry</span>.<span class="pl-en">delete</span>(<span class="pl-c1">0</span>, <span class="pl-v">END</span>)
+    <span class="pl-s1">variable1</span>.<span class="pl-en">set</span>(<span class="pl-s">'男'</span>)
+    <span class="pl-s1">status_entry</span>.<span class="pl-en">delete</span>(<span class="pl-c1">0</span>, <span class="pl-v">END</span>)
+
+<span class="pl-k">def</span> <span class="pl-en">display_data</span>(<span class="pl-s1">event</span>):<span class="pl-c">#等待树视图双击事件</span>
+    <span class="pl-s1">selected_item</span> <span class="pl-c1">=</span> <span class="pl-s1">tree</span>.<span class="pl-en">focus</span>()
+    <span class="pl-k">if</span> <span class="pl-s1">selected_item</span>:
+        <span class="pl-s1">row</span> <span class="pl-c1">=</span> <span class="pl-s1">tree</span>.<span class="pl-en">item</span>(<span class="pl-s1">selected_item</span>)[<span class="pl-s">'values'</span>]
+        <span class="pl-en">clear</span>() <span class="pl-c"># 清空输入框所有内容</span>
+        <span class="pl-s1">id_entry1</span>.<span class="pl-en">insert</span>(<span class="pl-c1">0</span>, <span class="pl-s1">row</span>[<span class="pl-c1">0</span>])
+        <span class="pl-s1">name_entry</span>.<span class="pl-en">insert</span>(<span class="pl-c1">0</span>, <span class="pl-s1">row</span>[<span class="pl-c1">1</span>])
+        <span class="pl-s1">role_entry</span>.<span class="pl-en">insert</span>(<span class="pl-c1">0</span>, <span class="pl-s1">row</span>[<span class="pl-c1">2</span>])
+        <span class="pl-s1">variable1</span>.<span class="pl-en">set</span>(<span class="pl-s1">row</span>[<span class="pl-c1">3</span>])
+        <span class="pl-s1">status_entry</span>.<span class="pl-en">insert</span>(<span class="pl-c1">0</span>, <span class="pl-s1">row</span>[<span class="pl-c1">4</span>])
+    <span class="pl-k">else</span>:
+        <span class="pl-k">pass</span>
+<span class="pl-k">def</span> <span class="pl-en">delete</span>():
+    <span class="pl-s1">selected_item</span> <span class="pl-c1">=</span> <span class="pl-s1">tree</span>.<span class="pl-en">focus</span>()
+    <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">selected_item</span>:
+        <span class="pl-s1">messagebox</span>.<span class="pl-en">showerror</span>(<span class="pl-s">"Error"</span>, <span class="pl-s">"请选择要删除的员工"</span>)
+    <span class="pl-k">else</span>:
+        <span class="pl-s1">id</span> <span class="pl-c1">=</span> <span class="pl-s1">id_entry1</span>.<span class="pl-en">get</span>()
+        <span class="pl-s1">database</span>.<span class="pl-en">delete_employee</span>(<span class="pl-s1">id</span>) <span class="pl-c"># 删除数据库中的数据</span>
+        <span class="pl-en">add_to_treeview</span>() <span class="pl-c"># 更新树视图</span>
+        <span class="pl-en">clear</span>() <span class="pl-c"># 清空输入框所有内容</span>
+        <span class="pl-s1">messagebox</span>.<span class="pl-en">showinfo</span>(<span class="pl-s">"Success"</span>, <span class="pl-s">"删除成功"</span>)
+
+<span class="pl-k">def</span> <span class="pl-en">update</span>():
+    <span class="pl-s1">selected_item</span> <span class="pl-c1">=</span> <span class="pl-s1">tree</span>.<span class="pl-en">focus</span>()
+    <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">selected_item</span>:
+        <span class="pl-s1">messagebox</span>.<span class="pl-en">showerror</span>(<span class="pl-s">"Error"</span>, <span class="pl-s">"请选择要更新的员工"</span>)
+    <span class="pl-k">else</span>:
+        <span class="pl-s1">id</span> <span class="pl-c1">=</span> <span class="pl-s1">id_entry1</span>.<span class="pl-en">get</span>()
+        <span class="pl-s1">name</span> <span class="pl-c1">=</span> <span class="pl-s1">name_entry</span>.<span class="pl-en">get</span>()
+        <span class="pl-s1">role</span> <span class="pl-c1">=</span> <span class="pl-s1">role_entry</span>.<span class="pl-en">get</span>()
+        <span class="pl-s1">gender</span> <span class="pl-c1">=</span> <span class="pl-s1">variable1</span>.<span class="pl-en">get</span>()
+        <span class="pl-s1">status</span> <span class="pl-c1">=</span> <span class="pl-s1">status_entry</span>.<span class="pl-en">get</span>()
+        <span class="pl-s1">database</span>.<span class="pl-en">update_employee</span>(<span class="pl-s1">name</span>, <span class="pl-s1">role</span>, <span class="pl-s1">gender</span>, <span class="pl-s1">status</span>,<span class="pl-s1">id</span>) <span class="pl-c"># 更新数据库中的数据</span>
+        <span class="pl-en">add_to_treeview</span>() <span class="pl-c"># 更新树视图</span>
+        <span class="pl-en">clear</span>() <span class="pl-c"># 清空输入框所有内容</span>
+        <span class="pl-s1">messagebox</span>.<span class="pl-en">showinfo</span>(<span class="pl-s">"牛逼"</span>, <span class="pl-s">"更新成功"</span>)
+
+
+<span class="pl-c"># 插入数据</span>
+<span class="pl-k">def</span> <span class="pl-en">insert</span>():
+    <span class="pl-s1">id</span> <span class="pl-c1">=</span> <span class="pl-s1">id_entry1</span>.<span class="pl-en">get</span>()
+    <span class="pl-s1">name</span> <span class="pl-c1">=</span> <span class="pl-s1">name_entry</span>.<span class="pl-en">get</span>()
+    <span class="pl-s1">role</span> <span class="pl-c1">=</span> <span class="pl-s1">role_entry</span>.<span class="pl-en">get</span>()
+    <span class="pl-s1">gender</span> <span class="pl-c1">=</span> <span class="pl-s1">variable1</span>.<span class="pl-en">get</span>()
+    <span class="pl-s1">status</span> <span class="pl-c1">=</span> <span class="pl-s1">status_entry</span>.<span class="pl-en">get</span>()
+    <span class="pl-k">if</span> <span class="pl-c1">not</span>(<span class="pl-s1">id</span> <span class="pl-c1">and</span> <span class="pl-s1">name</span> <span class="pl-c1">and</span> <span class="pl-s1">role</span> <span class="pl-c1">and</span> <span class="pl-s1">gender</span> <span class="pl-c1">and</span> <span class="pl-s1">status</span>):
+        <span class="pl-s1">messagebox</span>.<span class="pl-en">showerror</span>(<span class="pl-s">"Error"</span>, <span class="pl-s">"请填充所有的值"</span>)
+    <span class="pl-k">elif</span> <span class="pl-s1">database</span>.<span class="pl-en">id_exists</span>(<span class="pl-s1">id</span>):
+        <span class="pl-s1">messagebox</span>.<span class="pl-en">showerror</span>(<span class="pl-s">"Error"</span>, <span class="pl-s">"ID已存在"</span>)
+    <span class="pl-k">else</span>:
+        <span class="pl-s1">database</span>.<span class="pl-en">insert_employee</span>(<span class="pl-s1">id</span>, <span class="pl-s1">name</span>, <span class="pl-s1">role</span>, <span class="pl-s1">gender</span>, <span class="pl-s1">status</span>)
+        <span class="pl-en">add_to_treeview</span>()
+        <span class="pl-en">clear</span>()
+        <span class="pl-s1">messagebox</span>.<span class="pl-en">showinfo</span>(<span class="pl-s">"Success"</span>, <span class="pl-s">"添加成功"</span>)
+        <span class="pl-c">#clear_input()</span>
+        
+<span class="pl-c">################################################</span>
+
+
+<span class="pl-s1">top</span> <span class="pl-c1">=</span> <span class="pl-v">PhotoImage</span>(<span class="pl-s1">file</span><span class="pl-c1">=</span><span class="pl-s">"lfcg1.png"</span>)
+<span class="pl-s1">top_image</span> <span class="pl-c1">=</span> <span class="pl-v">Label</span>(<span class="pl-s1">app</span>, <span class="pl-s1">image</span><span class="pl-c1">=</span><span class="pl-s1">top</span>, <span class="pl-s1">bg</span><span class="pl-c1">=</span><span class="pl-s">"#f0f1f5"</span>)
+<span class="pl-s1">top_image</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">30</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">30</span>)
+
+<span class="pl-s1">title</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkLabel</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"精神病院员工管理系统"</span>, 
+                               <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>)
+<span class="pl-s1">title</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">60</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">30</span>)
+
+<span class="pl-s1">id_label1</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkLabel</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"编  号:"</span>, 
+                                   <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>)
+<span class="pl-s1">id_label1</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">20</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">80</span>)
+
+<span class="pl-s1">id_entry1</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkEntry</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#000"</span>,
+                                   <span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">border_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,
+                                   <span class="pl-s1">border_width</span><span class="pl-c1">=</span><span class="pl-c1">2</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">180</span>)
+<span class="pl-s1">id_entry1</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">100</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">80</span>)
+
+<span class="pl-s1">name_label</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkLabel</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"姓  名:"</span>, 
+                                    <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>)
+<span class="pl-s1">name_label</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">20</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">120</span>)
+
+<span class="pl-s1">name_entry</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkEntry</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#000"</span>,
+                                   <span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">border_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,
+                                   <span class="pl-s1">border_width</span><span class="pl-c1">=</span><span class="pl-c1">2</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">180</span>)
+<span class="pl-s1">name_entry</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">100</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">120</span>)
+
+<span class="pl-s1">role_label</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkLabel</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"角  色:"</span>, 
+                                    <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>)
+<span class="pl-s1">role_label</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">20</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">160</span>)
+
+<span class="pl-s1">role_entry</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkEntry</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#000"</span>,
+                                   <span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">border_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,
+                                   <span class="pl-s1">border_width</span><span class="pl-c1">=</span><span class="pl-c1">2</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">180</span>)
+<span class="pl-s1">role_entry</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">100</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">160</span>)
+
+<span class="pl-s1">gender_label</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkLabel</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"性  别:"</span>, 
+                                      <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>)
+<span class="pl-s1">gender_label</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">20</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">200</span>)
+
+<span class="pl-s1">options</span> <span class="pl-c1">=</span> [<span class="pl-s">'男'</span>, <span class="pl-s">'女'</span>, <span class="pl-s">'跨性别'</span>]
+<span class="pl-s1">variable1</span><span class="pl-c1">=</span><span class="pl-v">StringVar</span>()
+
+<span class="pl-s1">gender_options</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkComboBox</span>(<span class="pl-s1">app</span>,<span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>,
+                                           <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#000"</span>,<span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,
+                                           <span class="pl-s1">dropdown_hover_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,<span class="pl-s1">button_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,
+                                           <span class="pl-s1">button_hover_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,<span class="pl-s1">border_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,
+                                           <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">180</span>,<span class="pl-s1">variable</span><span class="pl-c1">=</span><span class="pl-s1">variable1</span>,<span class="pl-s1">values</span><span class="pl-c1">=</span><span class="pl-s1">options</span>,<span class="pl-s1">state</span><span class="pl-c1">=</span><span class="pl-s">"readonly"</span>)
+<span class="pl-s1">gender_options</span>.<span class="pl-en">set</span>(<span class="pl-s">'男'</span>)
+<span class="pl-s1">gender_options</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">100</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">200</span>)
+
+<span class="pl-s1">status_label</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkLabel</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"当前状态:"</span>, 
+                                       <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>)
+<span class="pl-s1">status_label</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">20</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">240</span>)
+
+<span class="pl-s1">status_entry</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkEntry</span>(<span class="pl-s1">app</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#000"</span>,
+                                      <span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">border_color</span><span class="pl-c1">=</span><span class="pl-s">"#0c9295"</span>,
+                                      <span class="pl-s1">border_width</span><span class="pl-c1">=</span><span class="pl-c1">2</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">180</span>)
+<span class="pl-s1">status_entry</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">100</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">240</span>)
+<span class="pl-c">#############################BUTTON按钮###################################</span>
+<span class="pl-s1">add_button</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkButton</span>(<span class="pl-s1">app</span>,<span class="pl-s1">command</span><span class="pl-c1">=</span><span class="pl-s1">insert</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"添加员工"</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, 
+                                     <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#05a312"</span>,
+                                     <span class="pl-s1">hover_color</span><span class="pl-c1">=</span><span class="pl-s">"#00850b"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>,
+                                     <span class="pl-s1">cursor</span><span class="pl-c1">=</span><span class="pl-s">"hand2"</span>,<span class="pl-s1">corner_radius</span><span class="pl-c1">=</span><span class="pl-c1">15</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">260</span>
+                                     )
+<span class="pl-s1">add_button</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">20</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">310</span>)
+
+<span class="pl-s1">clear_button</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkButton</span>(<span class="pl-s1">app</span>, <span class="pl-s1">command</span><span class="pl-c1">=</span><span class="pl-k">lambda</span>:<span class="pl-en">clear</span>(<span class="pl-c1">True</span>), <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"清空输入框"</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, 
+                                       <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#05a312"</span>,
+                                       <span class="pl-s1">hover_color</span><span class="pl-c1">=</span><span class="pl-s">"#00850b"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>,
+                                       <span class="pl-s1">cursor</span><span class="pl-c1">=</span><span class="pl-s">"hand2"</span>,<span class="pl-s1">corner_radius</span><span class="pl-c1">=</span><span class="pl-c1">15</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">260</span>
+                                       )
+<span class="pl-s1">clear_button</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">20</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">360</span>)
+
+<span class="pl-s1">update_button</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkButton</span>(<span class="pl-s1">app</span>, <span class="pl-s1">command</span><span class="pl-c1">=</span><span class="pl-s1">update</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"更新信息"</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, 
+                                         <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"#05a312"</span>,
+                                          <span class="pl-s1">hover_color</span><span class="pl-c1">=</span><span class="pl-s">"#00850b"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>,
+                                           <span class="pl-s1">cursor</span><span class="pl-c1">=</span><span class="pl-s">"hand2"</span>,<span class="pl-s1">corner_radius</span><span class="pl-c1">=</span><span class="pl-c1">15</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">260</span>)
+<span class="pl-s1">update_button</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">300</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">360</span>)
+
+<span class="pl-s1">delete_button</span> <span class="pl-c1">=</span> <span class="pl-s1">customtkinter</span>.<span class="pl-v">CTkButton</span>(<span class="pl-s1">app</span>,<span class="pl-s1">command</span><span class="pl-c1">=</span><span class="pl-s1">delete</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">"删除员工"</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font1</span>, 
+                                         <span class="pl-s1">text_color</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>,<span class="pl-s1">fg_color</span><span class="pl-c1">=</span><span class="pl-s">"red"</span>,
+                                          <span class="pl-s1">hover_color</span><span class="pl-c1">=</span><span class="pl-s">"#00850b"</span>,<span class="pl-s1">bg_color</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>,
+                                           <span class="pl-s1">cursor</span><span class="pl-c1">=</span><span class="pl-s">"hand2"</span>,<span class="pl-s1">corner_radius</span><span class="pl-c1">=</span><span class="pl-c1">15</span>,<span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">260</span>)
+<span class="pl-s1">delete_button</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">580</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">360</span>)
+<span class="pl-c">#####################################</span>
+<span class="pl-s1">style</span> <span class="pl-c1">=</span> <span class="pl-s1">ttk</span>.<span class="pl-v">Style</span>(<span class="pl-s1">app</span>)
+<span class="pl-s1">style</span>.<span class="pl-en">theme_use</span>(<span class="pl-s">'clam'</span>)
+<span class="pl-s1">style</span>.<span class="pl-en">configure</span>(<span class="pl-s">"Treeview"</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font2</span>, <span class="pl-s1">rowheight</span><span class="pl-c1">=</span><span class="pl-c1">30</span>, 
+                <span class="pl-s1">fieldbackground</span><span class="pl-c1">=</span><span class="pl-s">"#161c25"</span>, <span class="pl-s1">background</span><span class="pl-c1">=</span><span class="pl-s">"#fff"</span>, <span class="pl-s1">foreground</span><span class="pl-c1">=</span><span class="pl-s">"#000"</span>)
+<span class="pl-s1">style</span>.<span class="pl-en">map</span>(<span class="pl-s">"Treeview"</span>, <span class="pl-s1">background</span><span class="pl-c1">=</span>[(<span class="pl-s">"selected"</span>, <span class="pl-s">"#1a8f2d"</span>)])
+<span class="pl-s1">tree</span> <span class="pl-c1">=</span> <span class="pl-s1">ttk</span>.<span class="pl-v">Treeview</span>(<span class="pl-s1">app</span>, <span class="pl-s1">height</span><span class="pl-c1">=</span><span class="pl-c1">15</span>)
+<span class="pl-s1">tree</span>[<span class="pl-s">'columns'</span>] <span class="pl-c1">=</span> (<span class="pl-s">'ID'</span>, <span class="pl-s">'Name'</span>, <span class="pl-s">'Role'</span>, <span class="pl-s">'Gender'</span>, <span class="pl-s">'Status'</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">column</span>(<span class="pl-s">'#0'</span>, <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">0</span>, <span class="pl-s1">stretch</span><span class="pl-c1">=</span><span class="pl-s1">tk</span>.<span class="pl-v">NO</span>) <span class="pl-c"># 这个是设置第一列的宽度</span>
+<span class="pl-s1">tree</span>.<span class="pl-en">column</span>(<span class="pl-s">'ID'</span>, <span class="pl-s1">anchor</span><span class="pl-c1">=</span><span class="pl-s1">tk</span>.<span class="pl-v">CENTER</span>, <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">80</span>)<span class="pl-c"># 这个是设置第二列的宽度</span>
+<span class="pl-s1">tree</span>.<span class="pl-en">column</span>(<span class="pl-s">'Name'</span>, <span class="pl-s1">anchor</span><span class="pl-c1">=</span><span class="pl-s1">tk</span>.<span class="pl-v">CENTER</span>, <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">170</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">column</span>(<span class="pl-s">'Role'</span>, <span class="pl-s1">anchor</span><span class="pl-c1">=</span><span class="pl-s1">tk</span>.<span class="pl-v">CENTER</span>, <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">170</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">column</span>(<span class="pl-s">'Gender'</span>, <span class="pl-s1">anchor</span><span class="pl-c1">=</span><span class="pl-s1">tk</span>.<span class="pl-v">CENTER</span>, <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">170</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">column</span>(<span class="pl-s">'Status'</span>, <span class="pl-s1">anchor</span><span class="pl-c1">=</span><span class="pl-s1">tk</span>.<span class="pl-v">CENTER</span>, <span class="pl-s1">width</span><span class="pl-c1">=</span><span class="pl-c1">170</span>)
+
+<span class="pl-s1">tree</span>.<span class="pl-en">heading</span>(<span class="pl-s">'#0'</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">'ID'</span>)  <span class="pl-c">#这个是设置表头的名字</span>
+<span class="pl-s1">tree</span>.<span class="pl-en">heading</span>(<span class="pl-s">'ID'</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">'ID'</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">heading</span>(<span class="pl-s">'Name'</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">'Name'</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">heading</span>(<span class="pl-s">'Role'</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">'Role'</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">heading</span>(<span class="pl-s">'Gender'</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">'Gender'</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">heading</span>(<span class="pl-s">'Status'</span>, <span class="pl-s1">text</span><span class="pl-c1">=</span><span class="pl-s">'Status'</span>)
+
+<span class="pl-s1">tree</span>.<span class="pl-en">place</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-c1">500</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-c1">20</span>)
+<span class="pl-s1">tree</span>.<span class="pl-en">bind</span>(<span class="pl-s">'&lt;ButtonRelease&gt;'</span>,<span class="pl-s1">display_data</span>)
+<span class="pl-en">add_to_treeview</span>()
+
+<span class="pl-s1">app</span>.<span class="pl-en">mainloop</span>()</pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://mcoblackmore.github.io/liuchanghui.github.io"> Leo老师在这里 </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","mcoblackmore/liuchanghui.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>
