@@ -1,4 +1,3 @@
-
 <img width="366" alt="444" src="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/5b408367-7cae-4b15-9d19-50adb6e8e521">
 
 # 0.CCF 及 NOIP
@@ -144,9 +143,9 @@ D.内存储器
 
 五、某种计算机的内存容量是：640K，这里的640K容量是指（   ）个字节？
 A.640
-B.640*1000
-C.640*1024
-D. 640*1024*1024
+B.640x1000
+C.640x1024
+D. 640x1024x1024
 
 六、以下断电之后仍能保存数据的有（  ）
 A.寄存器
