@@ -118,31 +118,31 @@ YES<br>
 NO</p>
 </blockquote>
 <p>要解决这个问题，我们首先要抽丝剥茧——理解“栈”的精髓——就是几个操作而已：入栈、出栈、查看栈顶元素等。大家看到上图中有个指向栈顶的指针，我给它命名为t。这个很重要！上题要解决的是“左右圆括号是否匹配”的问题。那么我可以这么想：最开始的时候，我假设t=0, 然后我一个一个读入字符串里的每个元素，如果遇到了左括号，就让t++(自增1)，如果遇到了右括号，就让t--(自减1)。那么，如果表达式里的左右括号是成对匹配的，必然最后t=0了! 这一点看看自己能够想明白不？如果扫描完整个表达式，最终t不等于0，那么肯定有不匹配的括号！所以我们就用这种想法就能写出简单的代码解决上面的问题：</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate">//左右括号匹配： 
-#include&lt;iostream&gt;
-<span class="pl-k">using</span> <span class="pl-k">namespace</span> std;
-char a[10001];
-int i=0;
-int tot=0;
-int main(){
-	scanf("%s",&amp;a); //输入表达式；(2+3)*(47-5)@
-//	cin&gt;&gt;a;   //第二种方式；
-//	cin.getline(a,256);
-	while(a[i]!='@'){
-		//如果遇到左括号就“入栈”
-		if(a[i]=='(')	tot++; //模拟入栈动作
-		if(a[i]==')') {
-                        //过滤那些“先写右括号”的
-			if(tot&gt;0) 	 tot--;
-			else{
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span>左右括号匹配： </span>
+#<span class="pl-k">include</span><span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+<span class="pl-k">char</span> a[<span class="pl-c1">10001</span>];
+<span class="pl-k">int</span> i=<span class="pl-c1">0</span>;
+<span class="pl-k">int</span> tot=<span class="pl-c1">0</span>;
+<span class="pl-k">int</span> <span class="pl-en">main</span>(){
+	<span class="pl-c1">scanf</span>(<span class="pl-s"><span class="pl-pds">"</span>%s<span class="pl-pds">"</span></span>,&amp;a); <span class="pl-c"><span class="pl-c">//</span>输入表达式；(2+3)*(47-5)@</span>
+<span class="pl-c"><span class="pl-c">//</span>	cin&gt;&gt;a;   //第二种方式；</span>
+<span class="pl-c"><span class="pl-c">//</span>	cin.getline(a,256);</span>
+	<span class="pl-k">while</span>(a[i]!=<span class="pl-s"><span class="pl-pds">'</span>@<span class="pl-pds">'</span></span>){
+		<span class="pl-c"><span class="pl-c">//</span>如果遇到左括号就“入栈”</span>
+		<span class="pl-k">if</span>(a[i]==<span class="pl-s"><span class="pl-pds">'</span>(<span class="pl-pds">'</span></span>)	tot++; <span class="pl-c"><span class="pl-c">//</span>模拟入栈动作</span>
+		<span class="pl-k">if</span>(a[i]==<span class="pl-s"><span class="pl-pds">'</span>)<span class="pl-pds">'</span></span>) {
+                        <span class="pl-c"><span class="pl-c">//</span>过滤那些“先写右括号”的</span>
+			<span class="pl-k">if</span>(tot&gt;<span class="pl-c1">0</span>) 	 tot--;
+			<span class="pl-k">else</span>{
 				tot--;
-				break;
+				<span class="pl-k">break</span>;
 			}	
 		}
 		i++;
 	}
-	if(tot!=0)	cout&lt;&lt;"NO";
-	else	cout&lt;&lt;"YES";
+	<span class="pl-k">if</span>(tot!=<span class="pl-c1">0</span>)	cout&lt;&lt;<span class="pl-s"><span class="pl-pds">"</span>NO<span class="pl-pds">"</span></span>;
+	<span class="pl-k">else</span>	cout&lt;&lt;<span class="pl-s"><span class="pl-pds">"</span>YES<span class="pl-pds">"</span></span>;
 } </pre></div>
 <p>这是一种“最意象”的模拟栈的实现。（未完待续）</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>

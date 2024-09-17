@@ -141,32 +141,33 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/0eed8b1b-3fb5-43da-9dc8-3f449cb22ceb"><img src="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/0eed8b1b-3fb5-43da-9dc8-3f449cb22ceb" alt="999" style="max-width: 100%;"></a></p>
 <p>我们递归的过程大体是以下的思路:</p>
 <p>三个数位可能出现1-3每个数，所以我们使用递归算法求解的时候，先圈定这一个值，然后继续下搜，遍历完这“一条链”的时候，就上回一个数位看看还有没有其他选择，这样就保证了解不重不漏。</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#include&lt;bits/stdc++.h&gt;
-<span class="pl-k">using</span> <span class="pl-k">namespace</span> std;
-int n,a[20],v[20];
-void dfs(int x){
-    if(x==n+1)    {
-        for(int i=1;i&lt;n;i++)
-            printf("%d ",a[i]);
-        printf("%d\n",a[n]);
-        return;
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span><span class="pl-s"><span class="pl-pds">&lt;</span>bits/stdc++.h<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+<span class="pl-k">int</span> n,a[<span class="pl-c1">20</span>],v[<span class="pl-c1">20</span>];
+<span class="pl-k">void</span> <span class="pl-en">dfs</span>(<span class="pl-k">int</span> x){
+    <span class="pl-k">if</span>(x==n+<span class="pl-c1">1</span>)    {
+        <span class="pl-k">for</span>(<span class="pl-k">int</span> i=<span class="pl-c1">1</span>;i&lt;n;i++)
+            <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>%d <span class="pl-pds">"</span></span>,a[i]);
+        <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>%d<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>,a[n]);
+        <span class="pl-k">return</span>;
     }
-    for(int i=1;i&lt;=n;i++)
+    <span class="pl-k">for</span>(<span class="pl-k">int</span> i=<span class="pl-c1">1</span>;i&lt;=n;i++)
     {
-        if(v[i]==0)
+        <span class="pl-k">if</span>(v[i]==<span class="pl-c1">0</span>)
         {
             a[x]=i;
-            v[i]=1;
-            dfs(x+1);
-            v[i]=0;
+            v[i]=<span class="pl-c1">1</span>;
+            <span class="pl-c1">dfs</span>(x+<span class="pl-c1">1</span>);
+            v[i]=<span class="pl-c1">0</span>;
         }
     }
 }
-int main(){
-    scanf("%d",&amp;n);
-    dfs(1);
-    return 0;
-}</pre></div></div>
+<span class="pl-k">int</span> <span class="pl-en">main</span>(){
+    <span class="pl-c1">scanf</span>(<span class="pl-s"><span class="pl-pds">"</span>%d<span class="pl-pds">"</span></span>,&amp;n);
+    <span class="pl-c1">dfs</span>(<span class="pl-c1">1</span>);
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}
+</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
