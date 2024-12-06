@@ -112,13 +112,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h1>程序源代码</h1>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">pygame</span>
 
-<span class="pl-s1">pygame</span>.<span class="pl-s1">font</span>.<span class="pl-en">init</span>()
-<span class="pl-s1">screen</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-s1">display</span>.<span class="pl-en">set_mode</span>((<span class="pl-c1">600</span>, <span class="pl-c1">600</span>))
-<span class="pl-s1">pygame</span>.<span class="pl-s1">display</span>.<span class="pl-en">set_caption</span>(<span class="pl-s">'数独游戏(回溯法)'</span>)
-<span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-s1">image</span>.<span class="pl-en">load</span>(<span class="pl-s">'icon.png'</span>)
-<span class="pl-s1">pygame</span>.<span class="pl-s1">display</span>.<span class="pl-en">set_icon</span>(<span class="pl-s1">img</span>)
-<span class="pl-s1">font1</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-s1">font</span>.<span class="pl-v">SysFont</span>(<span class="pl-s">'Arial'</span>, <span class="pl-c1">40</span>)
-<span class="pl-s1">font2</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-s1">font</span>.<span class="pl-v">SysFont</span>(<span class="pl-s">'Arial'</span>, <span class="pl-c1">20</span>)
+<span class="pl-s1">pygame</span>.<span class="pl-c1">font</span>.<span class="pl-c1">init</span>()
+<span class="pl-s1">screen</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">display</span>.<span class="pl-c1">set_mode</span>((<span class="pl-c1">600</span>, <span class="pl-c1">600</span>))
+<span class="pl-s1">pygame</span>.<span class="pl-c1">display</span>.<span class="pl-c1">set_caption</span>(<span class="pl-s">'数独游戏(回溯法)'</span>)
+<span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">image</span>.<span class="pl-c1">load</span>(<span class="pl-s">'icon.png'</span>)
+<span class="pl-s1">pygame</span>.<span class="pl-c1">display</span>.<span class="pl-c1">set_icon</span>(<span class="pl-s1">img</span>)
+<span class="pl-s1">font1</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">font</span>.<span class="pl-c1">SysFont</span>(<span class="pl-s">'Arial'</span>, <span class="pl-c1">40</span>)
+<span class="pl-s1">font2</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">font</span>.<span class="pl-c1">SysFont</span>(<span class="pl-s">'Arial'</span>, <span class="pl-c1">20</span>)
 <span class="pl-s1">x</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span> <span class="pl-c"># 这是</span>
 <span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span> <span class="pl-c">#</span>
 <span class="pl-s1">dif</span> <span class="pl-c1">=</span> <span class="pl-c1">500</span> <span class="pl-c1">/</span> <span class="pl-c1">9</span> <span class="pl-c"># 表示每个格子的大小</span>
@@ -147,9 +147,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-k">def</span> <span class="pl-en">draw_box</span>():
    <span class="pl-s">"""绘制小格子的边框，可以更好地观察每个格子的位置"""</span>
    <span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">2</span>):
-       <span class="pl-s1">pygame</span>.<span class="pl-s1">draw</span>.<span class="pl-en">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">255</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>), (<span class="pl-s1">x</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span><span class="pl-c1">-</span><span class="pl-c1">3</span>, (<span class="pl-s1">y</span> <span class="pl-c1">+</span> <span class="pl-s1">i</span>) <span class="pl-c1">*</span> <span class="pl-s1">dif</span>),
+       <span class="pl-s1">pygame</span>.<span class="pl-c1">draw</span>.<span class="pl-c1">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">255</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>), (<span class="pl-s1">x</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span><span class="pl-c1">-</span><span class="pl-c1">3</span>, (<span class="pl-s1">y</span> <span class="pl-c1">+</span> <span class="pl-s1">i</span>) <span class="pl-c1">*</span> <span class="pl-s1">dif</span>),
                         (<span class="pl-s1">x</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">3</span>, (<span class="pl-s1">y</span> <span class="pl-c1">+</span> <span class="pl-s1">i</span>)<span class="pl-c1">*</span><span class="pl-s1">dif</span>), <span class="pl-c1">7</span>)
-       <span class="pl-s1">pygame</span>.<span class="pl-s1">draw</span>.<span class="pl-en">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">255</span>), ((<span class="pl-s1">x</span> <span class="pl-c1">+</span> <span class="pl-s1">i</span>) <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-s1">y</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>),
+       <span class="pl-s1">pygame</span>.<span class="pl-c1">draw</span>.<span class="pl-c1">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">255</span>), ((<span class="pl-s1">x</span> <span class="pl-c1">+</span> <span class="pl-s1">i</span>) <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-s1">y</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>),
                         ((<span class="pl-s1">x</span> <span class="pl-c1">+</span> <span class="pl-s1">i</span>) <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-s1">y</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-s1">dif</span>), <span class="pl-c1">7</span>)
 
 <span class="pl-k">def</span> <span class="pl-en">draw</span>():
@@ -157,35 +157,35 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
    <span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">9</span>):
        <span class="pl-k">for</span> <span class="pl-s1">j</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">9</span>):
            <span class="pl-k">if</span> <span class="pl-s1">grid</span>[<span class="pl-s1">i</span>][<span class="pl-s1">j</span>] <span class="pl-c1">!=</span> <span class="pl-c1">0</span>:
-               <span class="pl-s1">pygame</span>.<span class="pl-s1">draw</span>.<span class="pl-en">rect</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>),
+               <span class="pl-s1">pygame</span>.<span class="pl-c1">draw</span>.<span class="pl-c1">rect</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>),
                                 (<span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-s1">j</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>, <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>))
-               <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-en">render</span>(<span class="pl-en">str</span>(<span class="pl-s1">grid</span>[<span class="pl-s1">i</span>][<span class="pl-s1">j</span>]), <span class="pl-c1">1</span>, (<span class="pl-c1">255</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
-               <span class="pl-s1">screen</span>.<span class="pl-en">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">18</span>, <span class="pl-s1">j</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">6</span>))
+               <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-c1">render</span>(<span class="pl-en">str</span>(<span class="pl-s1">grid</span>[<span class="pl-s1">i</span>][<span class="pl-s1">j</span>]), <span class="pl-c1">1</span>, (<span class="pl-c1">255</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
+               <span class="pl-s1">screen</span>.<span class="pl-c1">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">18</span>, <span class="pl-s1">j</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">6</span>))
    <span class="pl-c"># 画出粗的横线和粗的竖线</span>
    <span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">10</span>):
        <span class="pl-k">if</span> <span class="pl-s1">i</span> <span class="pl-c1">%</span> <span class="pl-c1">3</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span>:
            <span class="pl-s1">thick</span> <span class="pl-c1">=</span> <span class="pl-c1">7</span>
        <span class="pl-k">else</span>:
            <span class="pl-s1">thick</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
-       <span class="pl-s1">pygame</span>.<span class="pl-s1">draw</span>.<span class="pl-en">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>), (<span class="pl-c1">0</span>, <span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>),
+       <span class="pl-s1">pygame</span>.<span class="pl-c1">draw</span>.<span class="pl-c1">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>), (<span class="pl-c1">0</span>, <span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>),
                         (<span class="pl-c1">500</span>, <span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>), <span class="pl-s1">thick</span>)
-       <span class="pl-s1">pygame</span>.<span class="pl-s1">draw</span>.<span class="pl-en">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>), (<span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-c1">0</span>),
+       <span class="pl-s1">pygame</span>.<span class="pl-c1">draw</span>.<span class="pl-c1">line</span>(<span class="pl-s1">screen</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>), (<span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-c1">0</span>),
                         (<span class="pl-s1">i</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span>, <span class="pl-c1">500</span>), <span class="pl-s1">thick</span>)
 
 <span class="pl-k">def</span> <span class="pl-en">draw_val</span>(<span class="pl-s1">val</span>):
    <span class="pl-s">"""将输入的数字显示在格子中"""</span>
-   <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-en">render</span>(<span class="pl-en">str</span>(<span class="pl-s1">val</span>), <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
-   <span class="pl-s1">screen</span>.<span class="pl-en">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-s1">x</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">18</span>, <span class="pl-s1">y</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">6</span>))
+   <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-c1">render</span>(<span class="pl-en">str</span>(<span class="pl-s1">val</span>), <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
+   <span class="pl-s1">screen</span>.<span class="pl-c1">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-s1">x</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">18</span>, <span class="pl-s1">y</span> <span class="pl-c1">*</span> <span class="pl-s1">dif</span> <span class="pl-c1">+</span> <span class="pl-c1">6</span>))
 
 <span class="pl-k">def</span> <span class="pl-en">raise_error_1</span>():
    <span class="pl-s">"""显示错误提示"""</span>
-   <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-en">render</span>(<span class="pl-s">'错误!!!'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
-   <span class="pl-s1">screen</span>.<span class="pl-en">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">570</span>))
+   <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-c1">render</span>(<span class="pl-s">'错误!!!'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
+   <span class="pl-s1">screen</span>.<span class="pl-c1">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">570</span>))
 
 <span class="pl-k">def</span> <span class="pl-en">raise_error_2</span>():
    <span class="pl-s">"""显示错误提示2"""</span>
-   <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-en">render</span>(<span class="pl-s">'错误，不是有效的值'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
-   <span class="pl-s1">screen</span>.<span class="pl-en">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">570</span>))
+   <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-c1">render</span>(<span class="pl-s">'错误，不是有效的值'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
+   <span class="pl-s1">screen</span>.<span class="pl-c1">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">570</span>))
 
 <span class="pl-k">def</span> <span class="pl-en">valid</span>(<span class="pl-s1">m</span>, <span class="pl-s1">i</span>, <span class="pl-s1">j</span>, <span class="pl-s1">val</span>):
    <span class="pl-s">"""判断输入的数字是否有效"""</span>
@@ -214,40 +214,40 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
            <span class="pl-s1">j</span> <span class="pl-c1">+=</span> <span class="pl-c1">1</span>
        <span class="pl-k">elif</span> <span class="pl-s1">i</span> <span class="pl-c1">==</span> <span class="pl-c1">8</span> <span class="pl-c1">and</span> <span class="pl-s1">j</span> <span class="pl-c1">==</span> <span class="pl-c1">8</span>:
            <span class="pl-k">return</span> <span class="pl-c1">True</span>
-   <span class="pl-s1">pygame</span>.<span class="pl-s1">event</span>.<span class="pl-en">pump</span>() <span class="pl-c"># 刷新事件队列，防止鼠标点击事件影响程序运行</span>
+   <span class="pl-s1">pygame</span>.<span class="pl-c1">event</span>.<span class="pl-c1">pump</span>() <span class="pl-c"># 刷新事件队列，防止鼠标点击事件影响程序运行</span>
    <span class="pl-k">for</span> <span class="pl-s1">it</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">1</span>, <span class="pl-c1">10</span>):
        <span class="pl-k">if</span> <span class="pl-en">valid</span>(<span class="pl-s1">grid</span>, <span class="pl-s1">i</span>, <span class="pl-s1">j</span>, <span class="pl-s1">it</span>) <span class="pl-c1">==</span> <span class="pl-c1">True</span>:
            <span class="pl-s1">grid</span>[<span class="pl-s1">i</span>][<span class="pl-s1">j</span>] <span class="pl-c1">=</span> <span class="pl-s1">it</span>
            <span class="pl-s1">x</span> <span class="pl-c1">=</span> <span class="pl-s1">i</span>
            <span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-s1">j</span>
-           <span class="pl-s1">screen</span>.<span class="pl-en">fill</span>((<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))
+           <span class="pl-s1">screen</span>.<span class="pl-c1">fill</span>((<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))
            <span class="pl-en">draw</span>()
            <span class="pl-en">draw_box</span>()
-           <span class="pl-s1">pygame</span>.<span class="pl-s1">display</span>.<span class="pl-en">update</span>()
-           <span class="pl-s1">pygame</span>.<span class="pl-s1">time</span>.<span class="pl-en">delay</span>(<span class="pl-c1">20</span>)
+           <span class="pl-s1">pygame</span>.<span class="pl-c1">display</span>.<span class="pl-c1">update</span>()
+           <span class="pl-s1">pygame</span>.<span class="pl-c1">time</span>.<span class="pl-c1">delay</span>(<span class="pl-c1">20</span>)
 
            <span class="pl-k">if</span> <span class="pl-en">solve</span>(<span class="pl-s1">grid</span>, <span class="pl-s1">i</span>, <span class="pl-s1">j</span>) <span class="pl-c1">==</span> <span class="pl-c1">1</span>:
                <span class="pl-k">return</span> <span class="pl-c1">True</span>
            <span class="pl-k">else</span>:
                <span class="pl-s1">grid</span>[<span class="pl-s1">i</span>][<span class="pl-s1">j</span>] <span class="pl-c1">=</span> <span class="pl-c1">0</span>
-           <span class="pl-s1">screen</span>.<span class="pl-en">fill</span>((<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))
+           <span class="pl-s1">screen</span>.<span class="pl-c1">fill</span>((<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))
 
            <span class="pl-en">draw</span>()
            <span class="pl-en">draw_box</span>()
-           <span class="pl-s1">pygame</span>.<span class="pl-s1">display</span>.<span class="pl-en">update</span>()
-           <span class="pl-s1">pygame</span>.<span class="pl-s1">time</span>.<span class="pl-en">delay</span>(<span class="pl-c1">50</span>)
+           <span class="pl-s1">pygame</span>.<span class="pl-c1">display</span>.<span class="pl-c1">update</span>()
+           <span class="pl-s1">pygame</span>.<span class="pl-c1">time</span>.<span class="pl-c1">delay</span>(<span class="pl-c1">50</span>)
    <span class="pl-k">return</span> <span class="pl-c1">False</span>
 
 <span class="pl-k">def</span> <span class="pl-en">instruction</span>():
-  <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font2</span>.<span class="pl-en">render</span>(
+  <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font2</span>.<span class="pl-c1">render</span>(
       <span class="pl-s">'D--RESET TO DEFAULT / R--CLEAR BOARD<span class="pl-cce">\n</span>'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
-  <span class="pl-s1">text2</span> <span class="pl-c1">=</span> <span class="pl-s1">font2</span>.<span class="pl-en">render</span>(
+  <span class="pl-s1">text2</span> <span class="pl-c1">=</span> <span class="pl-s1">font2</span>.<span class="pl-c1">render</span>(
       <span class="pl-s">'ENTER VALUES AND PRESS ENTER TO VISUALIZE<span class="pl-cce">\n</span>'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
-  <span class="pl-s1">screen</span>.<span class="pl-en">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">520</span>))
-  <span class="pl-s1">screen</span>.<span class="pl-en">blit</span>(<span class="pl-s1">text2</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">540</span>))
+  <span class="pl-s1">screen</span>.<span class="pl-c1">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">520</span>))
+  <span class="pl-s1">screen</span>.<span class="pl-c1">blit</span>(<span class="pl-s1">text2</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">540</span>))
 <span class="pl-k">def</span> <span class="pl-en">result</span>():
-  <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-en">render</span>(<span class="pl-s">'FINISHED PRESS R or D<span class="pl-cce">\n</span>'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
-  <span class="pl-s1">screen</span>.<span class="pl-en">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">570</span>))
+  <span class="pl-s1">text1</span> <span class="pl-c1">=</span> <span class="pl-s1">font1</span>.<span class="pl-c1">render</span>(<span class="pl-s">'FINISHED PRESS R or D<span class="pl-cce">\n</span>'</span>, <span class="pl-c1">1</span>, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>))
+  <span class="pl-s1">screen</span>.<span class="pl-c1">blit</span>(<span class="pl-s1">text1</span>, (<span class="pl-c1">20</span>, <span class="pl-c1">570</span>))
 
 
 <span class="pl-s1">run</span> <span class="pl-c1">=</span> <span class="pl-c1">True</span>
@@ -256,49 +256,49 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s1">rs</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>     <span class="pl-c"># 标识是否数独解决完成</span>
 <span class="pl-s1">error</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>  <span class="pl-c"># 标识是否输入了错误的数字</span>
 <span class="pl-k">while</span> <span class="pl-s1">run</span>:
-   <span class="pl-s1">screen</span>.<span class="pl-en">fill</span>((<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))
-   <span class="pl-k">for</span> <span class="pl-s1">event</span> <span class="pl-c1">in</span> <span class="pl-s1">pygame</span>.<span class="pl-s1">event</span>.<span class="pl-en">get</span>():
-       <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">type</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">QUIT</span>:
+   <span class="pl-s1">screen</span>.<span class="pl-c1">fill</span>((<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))
+   <span class="pl-k">for</span> <span class="pl-s1">event</span> <span class="pl-c1">in</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">event</span>.<span class="pl-c1">get</span>():
+       <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">type</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">QUIT</span>:
            <span class="pl-s1">run</span> <span class="pl-c1">=</span> <span class="pl-c1">False</span>
-       <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">type</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">MOUSEBUTTONDOWN</span>:
+       <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">type</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">MOUSEBUTTONDOWN</span>:
            <span class="pl-s1">flag_1</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
-           <span class="pl-s1">pos</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-s1">mouse</span>.<span class="pl-en">get_pos</span>()
+           <span class="pl-s1">pos</span> <span class="pl-c1">=</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">mouse</span>.<span class="pl-c1">get_pos</span>()
            <span class="pl-en">get_coord</span>(<span class="pl-s1">pos</span>)
-       <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">type</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">KEYDOWN</span>:
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_LEFT</span>:
+       <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">type</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">KEYDOWN</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_LEFT</span>:
                <span class="pl-s1">x</span> <span class="pl-c1">-=</span> <span class="pl-c1">1</span>
                <span class="pl-s1">flag_1</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_RIGHT</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_RIGHT</span>:
                <span class="pl-s1">x</span> <span class="pl-c1">+=</span> <span class="pl-c1">1</span>
                <span class="pl-s1">flag_1</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_UP</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_UP</span>:
                <span class="pl-s1">y</span> <span class="pl-c1">-=</span> <span class="pl-c1">1</span>
                <span class="pl-s1">flag_1</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_DOWN</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_DOWN</span>:
                <span class="pl-s1">y</span> <span class="pl-c1">+=</span> <span class="pl-c1">1</span>
                <span class="pl-s1">flag_1</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_1</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_1</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_2</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_2</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_3</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_3</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">3</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_4</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_4</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">4</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_5</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_5</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">5</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_6</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_6</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">6</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_7</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_7</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">7</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_8</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_8</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">8</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_9</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_9</span>:
                <span class="pl-s1">val</span> <span class="pl-c1">=</span> <span class="pl-c1">9</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_RETURN</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_RETURN</span>:
                <span class="pl-s1">flag_2</span> <span class="pl-c1">=</span> <span class="pl-c1">1</span>
            <span class="pl-c"># If R pressed clear sudoku board</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_r</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_r</span>:
                <span class="pl-s1">rs</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
                <span class="pl-s1">error</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
                <span class="pl-s1">flag_2</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
@@ -315,7 +315,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
                ]
 
            <span class="pl-c"># If D pressed reset board to default</span>
-           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-s1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-v">K_d</span>:
+           <span class="pl-k">if</span> <span class="pl-s1">event</span>.<span class="pl-c1">key</span> <span class="pl-c1">==</span> <span class="pl-s1">pygame</span>.<span class="pl-c1">K_d</span>:
                <span class="pl-s1">rs</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
                <span class="pl-s1">error</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
                <span class="pl-s1">flag_2</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
@@ -357,9 +357,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
    <span class="pl-k">if</span> <span class="pl-s1">flag_1</span> <span class="pl-c1">==</span> <span class="pl-c1">1</span>:
        <span class="pl-en">draw_box</span>()
    <span class="pl-en">instruction</span>()
-   <span class="pl-s1">pygame</span>.<span class="pl-s1">display</span>.<span class="pl-en">update</span>()
+   <span class="pl-s1">pygame</span>.<span class="pl-c1">display</span>.<span class="pl-c1">update</span>()
 
-<span class="pl-s1">pygame</span>.<span class="pl-en">quit</span>()</pre></div></div>
+<span class="pl-s1">pygame</span>.<span class="pl-c1">quit</span>()</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

@@ -282,66 +282,66 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/46283137-4a94-45f5-a429-8013c1cb2ca8"><img width="324" alt="22222" src="https://github.com/mcoblackmore/liuchanghui.github.io/assets/49425642/46283137-4a94-45f5-a429-8013c1cb2ca8" style="max-width: 100%;"></a></p>
 <h3>2.谢尔宾斯基三角形</h3>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">turtle</span>
-<span class="pl-s1">screen</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-v">Screen</span>()
-<span class="pl-s1">screen</span>.<span class="pl-en">tracer</span>(<span class="pl-c1">0</span>)
+<span class="pl-s1">screen</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-c1">Screen</span>()
+<span class="pl-s1">screen</span>.<span class="pl-c1">tracer</span>(<span class="pl-c1">0</span>)
 <span class="pl-k">def</span> <span class="pl-en">draw_sierpinski</span>(<span class="pl-s1">length</span>,<span class="pl-s1">depth</span>):
     <span class="pl-k">if</span> <span class="pl-s1">depth</span><span class="pl-c1">==</span><span class="pl-c1">0</span>:
         <span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">3</span>):
-            <span class="pl-s1">turtle</span>.<span class="pl-en">forward</span>(<span class="pl-s1">length</span>)
-            <span class="pl-s1">turtle</span>.<span class="pl-en">left</span>(<span class="pl-c1">120</span>)
+            <span class="pl-s1">turtle</span>.<span class="pl-c1">forward</span>(<span class="pl-s1">length</span>)
+            <span class="pl-s1">turtle</span>.<span class="pl-c1">left</span>(<span class="pl-c1">120</span>)
     <span class="pl-k">else</span>:
         <span class="pl-en">draw_sierpinski</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>,<span class="pl-s1">depth</span><span class="pl-c1">-</span><span class="pl-c1">1</span>)<span class="pl-c"># 递归调用自己</span>
-        <span class="pl-s1">turtle</span>.<span class="pl-en">forward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">forward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
         <span class="pl-en">draw_sierpinski</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>,<span class="pl-s1">depth</span><span class="pl-c1">-</span><span class="pl-c1">1</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">backward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">left</span>(<span class="pl-c1">60</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">forward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">right</span>(<span class="pl-c1">60</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">backward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">left</span>(<span class="pl-c1">60</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">forward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">right</span>(<span class="pl-c1">60</span>)
         <span class="pl-en">draw_sierpinski</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>,<span class="pl-s1">depth</span><span class="pl-c1">-</span><span class="pl-c1">1</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">left</span>(<span class="pl-c1">60</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">backward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">right</span>(<span class="pl-c1">60</span>)
-<span class="pl-s1">window</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-v">Screen</span>()
-<span class="pl-s1">window</span>.<span class="pl-en">bgcolor</span>(<span class="pl-s">'white'</span>) 
-<span class="pl-s1">turtle</span>.<span class="pl-en">speed</span>(<span class="pl-c1">0</span>)
-<span class="pl-s1">turtle</span>.<span class="pl-en">up</span>()
-<span class="pl-s1">turtle</span>.<span class="pl-en">goto</span>(<span class="pl-c1">-</span><span class="pl-c1">400</span>,<span class="pl-c1">-</span><span class="pl-c1">300</span>)
-<span class="pl-s1">turtle</span>.<span class="pl-en">down</span>()
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">left</span>(<span class="pl-c1">60</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">backward</span>(<span class="pl-s1">length</span><span class="pl-c1">/</span><span class="pl-c1">2</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">right</span>(<span class="pl-c1">60</span>)
+<span class="pl-s1">window</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-c1">Screen</span>()
+<span class="pl-s1">window</span>.<span class="pl-c1">bgcolor</span>(<span class="pl-s">'white'</span>) 
+<span class="pl-s1">turtle</span>.<span class="pl-c1">speed</span>(<span class="pl-c1">0</span>)
+<span class="pl-s1">turtle</span>.<span class="pl-c1">up</span>()
+<span class="pl-s1">turtle</span>.<span class="pl-c1">goto</span>(<span class="pl-c1">-</span><span class="pl-c1">400</span>,<span class="pl-c1">-</span><span class="pl-c1">300</span>)
+<span class="pl-s1">turtle</span>.<span class="pl-c1">down</span>()
 <span class="pl-c"># 使用不同的深度depth（这里是10）尝试产生不同的谢式三角形！</span>
 <span class="pl-en">draw_sierpinski</span>(<span class="pl-c1">800</span>,<span class="pl-c1">8</span>)  
-<span class="pl-s1">screen</span>.<span class="pl-en">update</span>()</pre></div>
+<span class="pl-s1">screen</span>.<span class="pl-c1">update</span>()</pre></div>
 <h3>3.科赫雪花</h3>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">turtle</span>
-<span class="pl-s1">wn</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-v">Screen</span>()
-<span class="pl-s1">wn</span>.<span class="pl-en">tracer</span>(<span class="pl-c1">0</span>)
-<span class="pl-s1">turtle</span>.<span class="pl-en">width</span>(<span class="pl-c1">4</span>)
-<span class="pl-s1">turtle</span>.<span class="pl-en">speed</span>(<span class="pl-c1">1000</span>)
+<span class="pl-s1">wn</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-c1">Screen</span>()
+<span class="pl-s1">wn</span>.<span class="pl-c1">tracer</span>(<span class="pl-c1">0</span>)
+<span class="pl-s1">turtle</span>.<span class="pl-c1">width</span>(<span class="pl-c1">4</span>)
+<span class="pl-s1">turtle</span>.<span class="pl-c1">speed</span>(<span class="pl-c1">1000</span>)
 <span class="pl-k">def</span> <span class="pl-en">koch</span>(<span class="pl-s1">t</span>,<span class="pl-s1">order</span>,<span class="pl-s1">size</span>):
     <span class="pl-k">if</span> <span class="pl-s1">order</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span>:
-        <span class="pl-s1">t</span>.<span class="pl-en">forward</span>(<span class="pl-s1">size</span>)
+        <span class="pl-s1">t</span>.<span class="pl-c1">forward</span>(<span class="pl-s1">size</span>)
     <span class="pl-k">else</span>:
         <span class="pl-en">koch</span>(<span class="pl-s1">t</span>,<span class="pl-s1">order</span><span class="pl-c1">-</span><span class="pl-c1">1</span>,<span class="pl-s1">size</span><span class="pl-c1">/</span><span class="pl-c1">3</span>)
-        <span class="pl-s1">t</span>.<span class="pl-en">left</span>(<span class="pl-c1">60</span>)
+        <span class="pl-s1">t</span>.<span class="pl-c1">left</span>(<span class="pl-c1">60</span>)
         <span class="pl-en">koch</span>(<span class="pl-s1">t</span>,<span class="pl-s1">order</span><span class="pl-c1">-</span><span class="pl-c1">1</span>,<span class="pl-s1">size</span><span class="pl-c1">/</span><span class="pl-c1">3</span>)
-        <span class="pl-s1">t</span>.<span class="pl-en">right</span>(<span class="pl-c1">120</span>)
+        <span class="pl-s1">t</span>.<span class="pl-c1">right</span>(<span class="pl-c1">120</span>)
         <span class="pl-en">koch</span>(<span class="pl-s1">t</span>,<span class="pl-s1">order</span><span class="pl-c1">-</span><span class="pl-c1">1</span>,<span class="pl-s1">size</span><span class="pl-c1">/</span><span class="pl-c1">3</span>)
-        <span class="pl-s1">t</span>.<span class="pl-en">left</span>(<span class="pl-c1">60</span>)
+        <span class="pl-s1">t</span>.<span class="pl-c1">left</span>(<span class="pl-c1">60</span>)
         <span class="pl-en">koch</span>(<span class="pl-s1">t</span>,<span class="pl-s1">order</span><span class="pl-c1">-</span><span class="pl-c1">1</span>,<span class="pl-s1">size</span><span class="pl-c1">/</span><span class="pl-c1">3</span>)
 <span class="pl-k">for</span> <span class="pl-s1">_</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">3</span>):
     <span class="pl-en">koch</span>(<span class="pl-s1">turtle</span>,<span class="pl-c1">5</span>,<span class="pl-c1">400</span>)
-    <span class="pl-s1">turtle</span>.<span class="pl-en">right</span>(<span class="pl-c1">120</span>)</pre></div>
+    <span class="pl-s1">turtle</span>.<span class="pl-c1">right</span>(<span class="pl-c1">120</span>)</pre></div>
 <h3>4.另一种五角星雪花</h3>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c">#"Recursive Star"</span>
 <span class="pl-k">import</span> <span class="pl-s1">turtle</span>
-<span class="pl-s1">wn</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-v">Screen</span>()
-<span class="pl-s1">wn</span>.<span class="pl-en">tracer</span>(<span class="pl-c1">0</span>,<span class="pl-c1">0</span>)
+<span class="pl-s1">wn</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-c1">Screen</span>()
+<span class="pl-s1">wn</span>.<span class="pl-c1">tracer</span>(<span class="pl-c1">0</span>,<span class="pl-c1">0</span>)
 <span class="pl-k">def</span> <span class="pl-en">star</span>(<span class="pl-s1">turtle</span>, <span class="pl-s1">n</span>,<span class="pl-s1">r</span>):
     <span class="pl-s">""" draw a star of n rays of length r"""</span>
     
     <span class="pl-k">for</span> <span class="pl-s1">k</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">0</span>,<span class="pl-s1">n</span>):
-        <span class="pl-s1">turtle</span>.<span class="pl-en">forward</span>(<span class="pl-s1">r</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">backward</span>(<span class="pl-s1">r</span>)
-        <span class="pl-s1">turtle</span>.<span class="pl-en">left</span>(<span class="pl-c1">360</span><span class="pl-c1">/</span><span class="pl-s1">n</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">forward</span>(<span class="pl-s1">r</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">backward</span>(<span class="pl-s1">r</span>)
+        <span class="pl-s1">turtle</span>.<span class="pl-c1">left</span>(<span class="pl-c1">360</span><span class="pl-c1">/</span><span class="pl-s1">n</span>)
     <span class="pl-s">"""</span>
 <span class="pl-s">    for k in range(5):</span>
 <span class="pl-s">        turtle.fd(r)</span>
@@ -351,15 +351,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-en">star</span>(<span class="pl-s1">turtle</span>, <span class="pl-s1">n</span>, <span class="pl-c1">1.6</span>)
     <span class="pl-k">else</span>:
         <span class="pl-k">for</span> <span class="pl-s1">k</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">0</span>,<span class="pl-s1">n</span>):
-            <span class="pl-s1">turtle</span>.<span class="pl-en">forward</span>(<span class="pl-s1">r</span>)
+            <span class="pl-s1">turtle</span>.<span class="pl-c1">forward</span>(<span class="pl-s1">r</span>)
             <span class="pl-en">recursive_star</span>(<span class="pl-s1">turtle</span>, <span class="pl-s1">n</span>, <span class="pl-c1">0.4</span><span class="pl-c1">*</span><span class="pl-s1">r</span>, <span class="pl-s1">depth</span> <span class="pl-c1">-</span> <span class="pl-c1">1</span>)
-            <span class="pl-s1">turtle</span>.<span class="pl-en">backward</span>(<span class="pl-s1">r</span>)
-            <span class="pl-s1">turtle</span>.<span class="pl-en">left</span>(<span class="pl-c1">360</span><span class="pl-c1">/</span><span class="pl-s1">n</span>)
+            <span class="pl-s1">turtle</span>.<span class="pl-c1">backward</span>(<span class="pl-s1">r</span>)
+            <span class="pl-s1">turtle</span>.<span class="pl-c1">left</span>(<span class="pl-c1">360</span><span class="pl-c1">/</span><span class="pl-s1">n</span>)
 
-<span class="pl-s1">fred</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-v">Turtle</span>()
-<span class="pl-s1">fred</span>.<span class="pl-en">speed</span>(<span class="pl-c1">1000</span>)
-<span class="pl-s1">fred</span>.<span class="pl-en">width</span>(<span class="pl-c1">2</span>)
-<span class="pl-s1">fred</span>.<span class="pl-en">color</span>(<span class="pl-s">'red'</span>)
+<span class="pl-s1">fred</span> <span class="pl-c1">=</span> <span class="pl-s1">turtle</span>.<span class="pl-c1">Turtle</span>()
+<span class="pl-s1">fred</span>.<span class="pl-c1">speed</span>(<span class="pl-c1">1000</span>)
+<span class="pl-s1">fred</span>.<span class="pl-c1">width</span>(<span class="pl-c1">2</span>)
+<span class="pl-s1">fred</span>.<span class="pl-c1">color</span>(<span class="pl-s">'red'</span>)
 <span class="pl-c">#star(fred,5,100)</span>
 <span class="pl-en">recursive_star</span>(<span class="pl-s1">fred</span>,<span class="pl-c1">5</span>,<span class="pl-c1">150</span>,<span class="pl-c1">4</span>)</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
